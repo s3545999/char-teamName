@@ -20,6 +20,13 @@ Player::~Player()
    hand = nullptr;
 }
 
+bool Player::operator > (const Player& player) const
+{
+   return score > player.score;
+}
+
+
+
 // Update the name of a player with a string input
 void Player::setName(std::string newName)
 {

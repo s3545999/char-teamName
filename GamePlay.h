@@ -22,10 +22,10 @@ class GamePlay
 
    void setMenu(Menu* menu);
    Menu* getMenu();
-    void setPlayer(Player* player);
+    void setPlayer(std::vector<Player* > thePlayers);
     void setBoard(Board* theBoard);
     Board* getBoard();
-
+    std::vector<Player* > getPlayers();
     bool check(char *s);
     void NewGame();
     
@@ -61,8 +61,7 @@ class GamePlay
     private:
     Menu* menu ;
     Board* theBoard;
-    Player* player1;
-    Player* player2;
+    std::vector<Player* > thePlayers;
 
 };
 

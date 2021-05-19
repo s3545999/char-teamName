@@ -11,25 +11,14 @@ GamePlay::~GamePlay()
 {
    delete theBoard;
    theBoard = nullptr;
-   delete player1;
-   player1 = nullptr;
-   delete player2;
-   player2 = nullptr;
    delete menu;
    menu = nullptr;
 }
 
 
-void GamePlay::setPlayer(Player* player)
+void GamePlay::setPlayer(std::vector<Player* > thePlayers)
 {
-   if(player->getNumber() == 1)
-   {
-      this->player1 = player;
-   }
-   else
-   {
-      this->player2 = player;
-   }
+   this->thePlayers = thePlayers;
 }
 
 void GamePlay::setBoard(Board* board)
@@ -52,6 +41,10 @@ Menu* GamePlay::getMenu()
    return menu;
 }
 
+std::vector<Player* > GamePlay::getPlayers()
+{
+   return thePlayers;
+}
 // One players turn
 // Will loop until successful move or quit
 bool GamePlay::playerMove(int playerTurn)
