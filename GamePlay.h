@@ -30,8 +30,8 @@ class GamePlay
     void NewGame();
     
     bool playerMove(int playerTurn);
-    bool tileInputtedIsOkay(std::string tileString, Player *player);
-    bool legalMove(Player* player);
+    bool tileInputtedIsOkay(std::string tileString, int playerTurn);
+    bool legalMove(int playerTurn);
     
     bool tileFit(Tile *tile, Location location);
     bool checkBothSides(int direction1, int direction2, Location location, Tile* tile);
@@ -40,9 +40,9 @@ class GamePlay
     void checkDirection(int direction1, Location location, std::vector<Tile*>* tileInLine);
     bool checkIfNextToTiles(Location location);
 
-    bool placeTile(std::vector<std::string> wordsIn, Player *player);
-    bool replaceTile(std::vector<std::string> wordsIn, Player *player);
-    bool saveGame(std::vector<std::string> wordsIn, Player *player, Player* player2);
+    bool placeTile(std::vector<std::string> wordsIn, int playerTurn);
+    bool replaceTile(std::vector<std::string> wordsIn, int playerTurn);
+    bool saveGame(std::vector<std::string> wordsIn, int playerTurn);
 
     int convertToRow(char row);
     int convertToCol(char col);
@@ -53,16 +53,16 @@ class GamePlay
 
     int score(Location location);
 
-    void HandPlayerTile(Player* player);
+    void HandPlayerTile(int playerTurn);
 
     int scoreDirection(int direction, Location location);
     void handOutBonusPoints();
 
     private:
-    Menu* menu ;
+
+    Menu* menu;
     Board* theBoard;
     std::vector<Player* > thePlayers;
-
 };
 
 

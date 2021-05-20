@@ -16,11 +16,11 @@ void LoadGame(GamePlay* gameTime);
 std::vector<Player* > getPlayerNames(int numPlayers, GamePlay* gameTime);
 std::vector<Tile *> initialiseTileBag();
 void handingTilesToPlayers(std::vector<Player* > thePlayers, Board *theBoard);
-void playingTheGame(Player *player1, Player *player2, GamePlay *gameTime);
+void playingTheGame(GamePlay* gameTime, int playersTurn);
 Player* loadInPlayer(std::ifstream& saveFile, Menu* menu);
 Board* loadInBoard(std::ifstream& saveFile, Menu* menu);
 std::vector<std::string> splitString(std::string string, std::string delim);
-void onePlayerTurn(Player* currentPlayer, Player* otherPlayer, GamePlay* gameTime);
+void onePlayerTurn(GamePlay* gameTime, int currentTurn);
 
 int main(void)
 {
@@ -61,7 +61,7 @@ int main(void)
          }
          else if (userInput == "4")
          {
-            // quit = true;
+            gameTime->getMenu()->setQuit(true);
          }
          else
          {
@@ -91,7 +91,8 @@ void NewGame(GamePlay* gameTime)
 
       if (numPlayers == "2" || numPlayers == "3" || numPlayers == "4")
       {
-         int numOfPlayers = gameTime->getMenu()->charToInt(' ');
+         int numOfPlayers = gameTime->getMenu()->charToInt(numPlayers[0]);
+         std::cout << numOfPlayers << std::endl;
          thePlayers = getPlayerNames(numOfPlayers, gameTime);
       }
       if (gameTime->getMenu()->getQuit() != true)
@@ -178,17 +179,21 @@ void handingTilesToPlayers(std::vector<Player* > thePlayers, Board *theBoard)
 void playingTheGame(GamePlay *gameTime, int playersTurn)
 {
    bool gameover = false;
-   bool quit;
    int currentTurn;
    while (!gameTime->getMenu()->getQuit() && !gameover)
    {
       for(currentTurn = playersTurn; 
-      currentTurn < gameTime->getPlayers().size(); currentTurn++)
+      currentTurn < gameTime->getPlayers().size() && !gameover && !gameTime->getMenu()->getQuit(); currentTurn++)
       {
+
          if(gameTime->getBoard()->getBag()->getSize() != 0 || 
-         gameTime->legalMove(gameTime->getPlayers().at(currentTurn)))
+         gameTime->legalMove(currentTurn))
          {
             onePlayerTurn(gameTime, currentTurn);
+            if (gameTime->getPlayers().at(currentTurn)->getHand()->getSize() == 0)
+            {
+               gameover = true;
+            }
          }
          else
          {
@@ -224,11 +229,6 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
    }
 }
 
-
-  
-
-
-
 // Start of a players turn
 void onePlayerTurn(GamePlay* gameTime, int playersTurn)
 {
@@ -256,12 +256,13 @@ void onePlayerTurn(GamePlay* gameTime, int playersTurn)
 //Loading saved game details from a save file
 void LoadGame(GamePlay* play)
 {
-
+   std::vector<Player *> thePlayers;
    std::vector<std::string> filename;
    std::string file;
-   Player* player2;
-   Player* player1;
    Board* theBoard;
+   Player* player;
+   std::string numPlayers;
+   int intOfPlayers;
 
     std::cout << "Enter the filename from which to load a game" << std::endl;
     filename = play->getMenu()->takeLineInput(' ');
@@ -273,28 +274,29 @@ void LoadGame(GamePlay* play)
 
       if(saveFile.is_open())
       {
-         
-         player1 = loadInPlayer(saveFile, play->getMenu());
-         player1->setNumber(1);
-         player2 = loadInPlayer(saveFile, play->getMenu());
-         player2->setNumber(2);
+         std::getline(saveFile, numPlayers);
+         intOfPlayers = play->getMenu()->charToInt(numPlayers[0]);
+         for (int i = 0; i < intOfPlayers; i++)
+         {
+            player = loadInPlayer(saveFile, play->getMenu());
+            thePlayers.push_back(player);
+         }
+
          theBoard = loadInBoard(saveFile, play->getMenu());
 
          std::string playerTurn = "";
 
          std::getline(saveFile, playerTurn);
 
-         play->setPlayer(player1);
-         play->setPlayer(player2);
+         play->setPlayer(thePlayers);
          play->setBoard(theBoard);
 
-         if(player1->getName() == playerTurn)
+         for(int i = 0; i < thePlayers.size(); i++)
          {
-            playingTheGame(player1, player2, play);
-         }
-         else
-         {
-            playingTheGame(player2, player1, play);
+            if(thePlayers.at(i)->getName() == playerTurn)
+            {
+               playingTheGame(play, i);
+            }
          }
       }
       else
@@ -353,12 +355,9 @@ Player* loadInPlayer(std::ifstream& saveFile, Menu* menu)
       Shape shape = menu->charToInt(playerHandVector[i][1]);
       Tile* newTile = new Tile(colour, shape);
       player1Hand->addBack(newTile);
-      // delete newTile;
-      
    }
 
    Player* playerOne = new Player(playerName, player1score, player1Hand);
-   // delete player1Hand;
    return playerOne;
 }
 //Loads in the tiles placed on the board

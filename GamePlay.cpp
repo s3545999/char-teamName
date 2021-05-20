@@ -54,24 +54,8 @@ bool GamePlay::playerMove(int playerTurn)
    bool gameSaved = false;
    bool triedToSaveGame = false;
 
-   Player* player;
-   Player* playerTwo;
-
-   if(player1->getNumber() == playerTurn)
-   {
-      player = player1;
-      playerTwo = player2;
-   }
-   else
-   {
-      player = player2;
-      playerTwo = player1;
-   }
-   
-
-
-   std::cout << player->getName() << ". Your hand is: " << std::endl;
-   std::cout << player->getHand()->llToString() << std::endl;
+   std::cout << thePlayers.at(playerTurn)->getName() << ". Your hand is: " << std::endl;
+   std::cout << thePlayers.at(playerTurn)->getHand()->llToString() << std::endl;
    std::cout << std::endl;
    std::cout << "What would you like to play and where?" << std::endl;
 
@@ -84,8 +68,8 @@ bool GamePlay::playerMove(int playerTurn)
       {
          if (wordsIn.size() == 4 && wordsIn[0] == "place" && wordsIn[2] == "at")
          {
-            tilePlaced = placeTile(wordsIn, player);
-            if(player->getHand()->getSize() == 0)
+            tilePlaced = placeTile(wordsIn, playerTurn);
+            if(thePlayers.at(playerTurn)->getHand()->getSize() == 0)
             {
                std::cout << std::endl;
                theBoard->toString();
@@ -93,11 +77,11 @@ bool GamePlay::playerMove(int playerTurn)
          }
          else if (wordsIn.size() == 2 && wordsIn[0] == "replace")
          {
-            tileReplaced = replaceTile(wordsIn, player);
+            tileReplaced = replaceTile(wordsIn, playerTurn);
          }
          else if(wordsIn.size() == 2 && wordsIn[0] == "save")
          {
-            gameSaved = saveGame(wordsIn, player, playerTwo);
+            gameSaved = saveGame(wordsIn, playerTurn);
             std::cout << "Game successfully saved" <<std::endl;
             triedToSaveGame = true;
          }
@@ -116,7 +100,7 @@ bool GamePlay::playerMove(int playerTurn)
 }
 
 // Takes the tile inputted and determines if it is in the players hand
-bool GamePlay::tileInputtedIsOkay(std::string tileString, Player *player)
+bool GamePlay::tileInputtedIsOkay(std::string tileString, int playerTurn)
 {
    bool isOkay = false;
    char colour = tileString[0];
@@ -128,7 +112,7 @@ bool GamePlay::tileInputtedIsOkay(std::string tileString, Player *player)
       {
 
          Tile *tile = new Tile(colour, shape);
-         if (player->getHand()->isInLinkedList(tile))
+         if (thePlayers.at(playerTurn)->getHand()->isInLinkedList(tile))
          {
             isOkay = true;
          }
@@ -138,20 +122,19 @@ bool GamePlay::tileInputtedIsOkay(std::string tileString, Player *player)
    return isOkay;
 }
 
-bool GamePlay::legalMove(Player* player)
+bool GamePlay::legalMove(int playerTurn)
 {
    bool check = false;
    if(!theBoard->checkEmpty())
    {
-
       for (int i=0; i < theBoard->getRows() && check == false; i++)
       {
          for (int j=0; j < theBoard->getCols() && check == false; j++)
          {
-            for (int k=0; k < player->getHand()->getSize() && check == false; k++)
+            for (int k=0; k < thePlayers.at(playerTurn)->getHand()->getSize() && check == false; k++)
             {
                Location location(i,j);
-               Tile* tile = player->getHand()->get(k);
+               Tile* tile = thePlayers.at(playerTurn)->getHand()->get(k);
                check = tileFit(tile, location);
             }
          }
@@ -195,7 +178,7 @@ Location GamePlay::convertInputLoc(std::string inputLocation)
 }
 
 // Places a tile in a location if it is an acceptable location
-bool GamePlay::placeTile(std::vector<std::string> wordsIn, Player *player)
+bool GamePlay::placeTile(std::vector<std::string> wordsIn, int playerTurn)
 {
    Tile *checkTile = nullptr;
 
@@ -206,7 +189,7 @@ bool GamePlay::placeTile(std::vector<std::string> wordsIn, Player *player)
    bool acceptableLoc = false;
 
 
-   acceptableTile = tileInputtedIsOkay(wordsIn[1], player);
+   acceptableTile = tileInputtedIsOkay(wordsIn[1], playerTurn);
    checkTile = new Tile(wordsIn[1][0], menu->charToInt(wordsIn[1][1]));
 
 
@@ -224,13 +207,13 @@ bool GamePlay::placeTile(std::vector<std::string> wordsIn, Player *player)
    // if player input were correct place the tile, put new tile in players hand
    if (!isSpotTaken && acceptableTile && locExists && acceptableLoc)
    {
-      int tileIndex = player->getHand()->findSpecificTile(checkTile);
-      player->getHand()->removeAt(tileIndex);
+      int tileIndex = thePlayers.at(playerTurn)->getHand()->findSpecificTile(checkTile);
+      thePlayers.at(playerTurn)->getHand()->removeAt(tileIndex);
       theBoard->placeTile(checkTile, toPlace);
 
       // Hand new tile to the player SHOULD BE A METHOD
-      HandPlayerTile(player);
-      player->addScore(score(toPlace));
+      HandPlayerTile(playerTurn);
+      thePlayers.at(playerTurn)->addScore(score(toPlace));
       moveMade = true;   
    }
    else
@@ -264,22 +247,22 @@ bool GamePlay::tileFit(Tile* tile, Location location)
 }
 
 // Replaces a tile in a players hand if legal to do
-bool GamePlay::replaceTile(std::vector<std::string> wordsIn, Player *player)
+bool GamePlay::replaceTile(std::vector<std::string> wordsIn, int playerTurn)
 {
    bool rtnReplaced = false;
 
-   bool tileInputInHand = tileInputtedIsOkay(wordsIn[1], player);
+   bool tileInputInHand = tileInputtedIsOkay(wordsIn[1], playerTurn);
 
    if (tileInputInHand && theBoard->getBag()->getSize() != 0)
    {
 
       Tile *checkTile = turnInputToTile(wordsIn[1]);
-      int tileIndex = player->getHand()->findSpecificTile(checkTile);
-      // Tile *playersTile = player->getHand()->get(tileIndex);
-      player->getHand()->removeAt(tileIndex);
+      int tileIndex = thePlayers.at(playerTurn)->getHand()->findSpecificTile(checkTile);
+      
+      thePlayers.at(playerTurn)->getHand()->removeAt(tileIndex);
       theBoard->getBag()->addBack(checkTile);
 
-      HandPlayerTile(player);
+      HandPlayerTile(playerTurn);
 
       rtnReplaced = true;
       // delete checkTile;
@@ -417,18 +400,18 @@ bool GamePlay::compareTiles(std::vector<Tile*>* tileInLine)
 }
 
 // Hands the first tile from the bag to the player
-void GamePlay::HandPlayerTile(Player* player)
+void GamePlay::HandPlayerTile(int playerTurn)
 {
    if (theBoard->getBag()->getSize() != 0)
    {
       Tile *tmpTile = theBoard->getBag()->getFront();
       theBoard->getBag()->removeFront();
-      player->getHand()->addBack(tmpTile);
+      thePlayers.at(playerTurn)->getHand()->addBack(tmpTile);
    }
 }
 
 // Saves a game into a file
-bool GamePlay::saveGame(std::vector<std::string> wordsIn, Player *player, Player* player2)
+bool GamePlay::saveGame(std::vector<std::string> wordsIn, int playersTurn)
 {
 
    bool saveCheck = false;
@@ -436,29 +419,15 @@ bool GamePlay::saveGame(std::vector<std::string> wordsIn, Player *player, Player
    std::string fileName = wordsIn[1];
 
    fileName = fileName.append(fileExtension);
-   // std::cout << fileName <<std::endl;
    
    std::ofstream MyFile(fileName);
    if(!MyFile.fail())
    {
-      if(player->getNumber() == 1)
+      for(int i =0; i< thePlayers.size(); i++)
       {
-         MyFile << player->getName() << std::endl;
-         MyFile << player->getScore() << std::endl;
-         MyFile << player->getHand()->llToString() << std::endl;
-         MyFile << player2->getName() << std::endl;
-         MyFile << player2->getScore() << std::endl;
-         MyFile << player2->getHand()->llToString() << std::endl;
-      }
-      else
-      {
-         MyFile << player2->getName() << std::endl;
-         MyFile << player2->getScore() << std::endl;
-         MyFile << player2->getHand()->llToString() << std::endl;
-         MyFile << player->getName() << std::endl;
-         MyFile << player->getScore() << std::endl;
-         MyFile << player->getHand()->llToString() << std::endl;
-
+         MyFile << thePlayers.at(i)->getName() << std::endl;
+         MyFile << thePlayers.at(i)->getScore() << std::endl;
+         MyFile << thePlayers.at(i)->getHand()->llToString() << std::endl;
       }
 
       MyFile << NO_OF_ROWS << ",";
@@ -466,7 +435,7 @@ bool GamePlay::saveGame(std::vector<std::string> wordsIn, Player *player, Player
 
       MyFile << theBoard->saveBoard() <<std::endl;
       MyFile << theBoard->getBag()->llToString() <<std::endl;
-      MyFile << player->getName() << std::endl;
+      MyFile << thePlayers.at(playersTurn)->getName() << std::endl;
 
       saveCheck = true;
       
@@ -556,12 +525,11 @@ int GamePlay::scoreDirection(int direction, Location location)
 
 void GamePlay::handOutBonusPoints()
 {
-   if(player1->getHand()->getSize() == 0)
+   for(int i = 0; i< thePlayers.size(); i++)
    {
-      player1->addScore(6);
-   }
-   else if (player2->getHand()->getSize() == 0)
-   {
-      player2->addScore(6);
+      if(thePlayers.at(i)->getHand()->getSize() == 0)
+      {
+         thePlayers.at(i)->addScore(6);
+      }
    }
 }

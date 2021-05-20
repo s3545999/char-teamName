@@ -14,7 +14,7 @@ public:
 
    std::string getName();
    
-   bool Player::operator > (const Player& player) const;
+   bool operator > (const Player& player) const;
    int getScore();
 
    int getNumber();
