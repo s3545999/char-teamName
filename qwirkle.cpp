@@ -183,9 +183,9 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
    while (!gameTime->getMenu()->getQuit() && !gameover)
    {
       for(currentTurn = playersTurn; 
-      currentTurn < gameTime->getPlayers().size() && !gameover && !gameTime->getMenu()->getQuit(); currentTurn++)
+      currentTurn < gameTime->getPlayers().size() && !gameover && 
+      !gameTime->getMenu()->getQuit(); currentTurn++)
       {
-
          if(gameTime->getBoard()->getBag()->getSize() != 0 || 
          gameTime->legalMove(currentTurn))
          {
@@ -243,8 +243,8 @@ void onePlayerTurn(GamePlay* gameTime, int playersTurn)
    {
       if (i != playersTurn)
       {
-         std::cout << gameTime->getPlayers().at(playersTurn)->getName() << "'s score: " << 
-         gameTime->getPlayers().at(playersTurn)->getScore() << std::endl;
+         std::cout << gameTime->getPlayers().at(i)->getName() << "'s score: " << 
+         gameTime->getPlayers().at(i)->getScore() << std::endl;
       }
    }
   

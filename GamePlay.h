@@ -29,7 +29,10 @@ class GamePlay
     bool check(char *s);
     void NewGame();
     
-    bool playerMove(int playerTurn);
+    std::vector<Move> place(std::vector<std::string> wordIn, int playerTurn, std::vector<Move> theMoves);
+    bool checkNextTo(std::vector<Move> theMoves, Tile* tile, Location location);
+
+    void playerMove(int playerTurn);
     bool tileInputtedIsOkay(std::string tileString, int playerTurn);
     bool legalMove(int playerTurn);
     
@@ -50,8 +53,8 @@ class GamePlay
     Tile *turnInputToTile(std::string tiledata);
 
     Location convertInputLoc(std::string inputLocation);
-
-    int score(Location location);
+    bool inputtedLocIsOkay(std::string location);
+    int score(std::vector<Move> theMoves);
 
     void HandPlayerTile(int playerTurn);
 

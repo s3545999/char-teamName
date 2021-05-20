@@ -47,37 +47,49 @@ std::vector<Player* > GamePlay::getPlayers()
 }
 // One players turn
 // Will loop until successful move or quit
-bool GamePlay::playerMove(int playerTurn)
+void GamePlay::playerMove(int playerTurn)
 {
-   bool tilePlaced = false;
    bool tileReplaced = false;
    bool gameSaved = false;
    bool triedToSaveGame = false;
+   bool endTurn = false;
 
-   std::cout << thePlayers.at(playerTurn)->getName() << ". Your hand is: " << std::endl;
-   std::cout << thePlayers.at(playerTurn)->getHand()->llToString() << std::endl;
-   std::cout << std::endl;
-   std::cout << "What would you like to play and where?" << std::endl;
-
-   while (!tileReplaced && !tilePlaced && !menu->getQuit())
+   std::vector<Move> theMoves;
+   std::vector<std::string> wordsIn;
+   while (!tileReplaced && !endTurn && !menu->getQuit())
    {
-
-      std::vector<std::string> wordsIn = menu->takeLineInput(' ');
-      triedToSaveGame = false;
-      if (!menu->getQuit())
+      wordsIn.empty();
+      if(theMoves.size() == 0)
       {
+         std::cout << thePlayers.at(playerTurn)->getName() << ". Your hand is: " << std::endl;
+         std::cout << thePlayers.at(playerTurn)->getHand()->llToString() << std::endl;
+         std::cout << std::endl;
+         
+         std::cout << "What move would you like to do?" << std::endl;
+         wordsIn = menu->takeLineInput(' ');
+      }
+      else
+      {
+         theBoard->toString();
+         std::cout << thePlayers.at(playerTurn)->getName() << ". Your hand is: " << std::endl;
+         std::cout << thePlayers.at(playerTurn)->getHand()->llToString() << std::endl;
+         std::cout << "Would you like to place again?" << std::endl;
+         std::cout << "Typing 'end' will end your turn" << std::endl;
+         wordsIn = menu->takeLineInput(' ');
+      }
+
+      triedToSaveGame = false;
+
+      if (!menu->getQuit())
+      {  
          if (wordsIn.size() == 4 && wordsIn[0] == "place" && wordsIn[2] == "at")
          {
-            tilePlaced = placeTile(wordsIn, playerTurn);
-            if(thePlayers.at(playerTurn)->getHand()->getSize() == 0)
-            {
-               std::cout << std::endl;
-               theBoard->toString();
-            }
+            theMoves = place(wordsIn, playerTurn, theMoves);
          }
-         else if (wordsIn.size() == 2 && wordsIn[0] == "replace")
+         else if (wordsIn.size() == 2 && wordsIn[0] == "replace" && theMoves.size() == 0)
          {
             tileReplaced = replaceTile(wordsIn, playerTurn);
+            endTurn = true;
          }
          else if(wordsIn.size() == 2 && wordsIn[0] == "save")
          {
@@ -85,18 +97,52 @@ bool GamePlay::playerMove(int playerTurn)
             std::cout << "Game successfully saved" <<std::endl;
             triedToSaveGame = true;
          }
+         else if(theMoves.size() != 0 && wordsIn.size() == 1 && wordsIn[0] == "end")
+         {
+            endTurn = true;
+         }
          else
          {
             std::cout << "Incorrect Input!" << std::endl;
             std::cout << "Please input again" << std::endl;
          }
+
+         if(theMoves.size() == 6)
+         {
+            std::cout << "Your have placed all your tiles" << std::endl;
+            std::cout << "Your turn is over" << std::endl;
+            endTurn = true;
+         }
+
          if(triedToSaveGame && !gameSaved)
          {
             std::cout << "Failed to save!" << std::endl;
          }
       }
    }
-  return !menu->getQuit();
+   if(!menu->getQuit())
+   {
+      thePlayers.at(playerTurn)->addScore(score(theMoves));
+   }
+  
+}
+
+
+std::vector<Move> GamePlay::place(std::vector<std::string> wordsIn, int playerTurn, std::vector<Move> theMoves)
+{
+   std::vector<Move> moves = theMoves;
+   if (tileInputtedIsOkay(wordsIn[1], playerTurn))
+   {
+      Tile* tile = turnInputToTile(wordsIn[1]);
+      Location location = convertInputLoc(wordsIn[3]);
+      
+      if(checkNextTo(theMoves, tile, location) && placeTile(wordsIn, playerTurn))
+      {
+         Move move(location, tile);
+         moves.push_back(move);
+      }
+   }
+   return moves;
 }
 
 // Takes the tile inputted and determines if it is in the players hand
@@ -121,6 +167,28 @@ bool GamePlay::tileInputtedIsOkay(std::string tileString, int playerTurn)
    }
    return isOkay;
 }
+
+bool GamePlay::inputtedLocIsOkay(std::string location)
+{
+   bool okay = false;
+   if(location.size() == 2 || location.size() == 3)
+   {
+      if(location[0] >= 'A' && location[0] <= 'Z')
+      {
+         if(location.size() == 2 && location[1] >= '0' && location[1] <= '9')
+         {
+            okay = true;
+         }
+         else if(location.size() == 3 && location[1] >= '0' && location[1] <= '9'
+         && location[2] >= '0' && location[2] <=9)
+         {
+            okay = true;
+         }
+      }
+   }
+   return okay;
+}
+
 
 bool GamePlay::legalMove(int playerTurn)
 {
@@ -212,8 +280,8 @@ bool GamePlay::placeTile(std::vector<std::string> wordsIn, int playerTurn)
       theBoard->placeTile(checkTile, toPlace);
 
       // Hand new tile to the player SHOULD BE A METHOD
-      HandPlayerTile(playerTurn);
-      thePlayers.at(playerTurn)->addScore(score(toPlace));
+      // HandPlayerTile(playerTurn);
+   // thePlayers.at(playerTurn)->addScore(score(toPlace));
       moveMade = true;   
    }
    else
@@ -225,6 +293,54 @@ bool GamePlay::placeTile(std::vector<std::string> wordsIn, int playerTurn)
 
    return moveMade;
 }
+
+bool GamePlay::checkNextTo(std::vector<Move> theMoves, Tile* tile, Location location)
+{
+   bool match = false;
+
+   bool colMatch = true;
+   bool rowMatch = true;
+   Location nextLoc;
+   if(theMoves.size() != 0)
+   {
+      for(int i = 0; i< theMoves.size(); i++)
+      {
+         if(location.col != theMoves.at(i).location.col)
+         {
+            colMatch = false;
+         }
+         if(location.row != theMoves.at(i).location.row)
+         {
+            rowMatch = false;
+         }
+
+         Location theMoveLoc = theMoves.at(i).location;
+         
+         for(int i = UP; i<= LEFT; i++)
+         {
+            nextLoc.col = location.getNextCol(i);
+            nextLoc.row = location.getNextRow(i);
+
+            if(theMoveLoc.col == nextLoc.col && theMoveLoc.row == nextLoc.row)
+            {
+               match = true;
+            }
+         }
+      }
+      if(!colMatch && !rowMatch)
+      {
+         match = false;
+      }
+   }
+   else
+   {
+      match = true;
+   }
+
+   return match; 
+}
+
+
 
 // Checks if a tile can legally be placed in a location
 bool GamePlay::tileFit(Tile* tile, Location location)
@@ -359,8 +475,6 @@ void GamePlay::checkDirection(int direction1, Location location, std::vector<Til
 bool GamePlay::compareTiles(std::vector<Tile*>* tileInLine)
 {
    bool match = false;
-   // Shape nextShape;
-   // Colour nextColour;
 
 
    Shape shape;
@@ -447,48 +561,78 @@ bool GamePlay::saveGame(std::vector<std::string> wordsIn, int playersTurn)
 }
 
 // Determines the score of a move
-int GamePlay::score(Location location)
+int GamePlay::score(std::vector<Move> theMoves)
 {
    int score  = 0;
    Location nextLocation;
+   bool inMoves = false;
 
-   
-   for (int direction = UP; direction <= RIGHT; direction++)
+   score += theMoves.size();
+   if(theMoves.size() == 6)
    {
-      
-      nextLocation.row = location.row;
-      nextLocation.col = location.col;
-      
-      int counter = 0;
-      counter += scoreDirection(direction, nextLocation);
-      nextLocation.row = location.row;
-      nextLocation.col = location.col;
-      if (direction == UP)
-      {
-         counter +=scoreDirection(DOWN, nextLocation);
-      }
-      nextLocation.row = location.row;
-      nextLocation.col = location.col;
-      if (direction == RIGHT)
-      {
-         counter += scoreDirection(LEFT, nextLocation);
-      }
-      if (counter != 0)
-      {
-         counter ++;
-      }
-      if(counter == 6)
-      {
-         std::cout << std::endl;
-         std::cout << "QWIRKLE!!!" <<std::endl;
-
-         counter += 6;
-      }
-
-      score += counter;
-
+      std::cout << std::endl;
+      std::cout << "QWIRKLE!!!" <<std::endl;
    }
+   for(int i = 0; i < theMoves.size(); i++)
+   {
+      for (int direction = UP; direction <= RIGHT; direction++)
+      {
+         int counter = 0;
+         nextLocation.row = theMoves.at(i).location.getNextRow(direction);
+         nextLocation.col = theMoves.at(i).location.getNextCol(direction);
+         
+         for(int j = 0; j < theMoves.size(); j++)
+         {
+            if(nextLocation.row == theMoves.at(j).location.row
+            && nextLocation.col == theMoves.at(j).location.col)
+            {
+               inMoves = true;
+            }
+         }
+         if(!inMoves)
+         {
+            counter += scoreDirection(direction, nextLocation);
+         }
 
+         int otherDirection;
+         
+         if (direction == UP)
+         {
+            otherDirection = DOWN;
+         }
+         else if (direction == RIGHT)
+         {
+            otherDirection = LEFT;
+         }
+
+         for(int j = 0; j < theMoves.size(); j++)
+         {
+            nextLocation.row = theMoves.at(i).location.getNextRow(otherDirection);
+            nextLocation.col = theMoves.at(i).location.getNextCol(otherDirection);
+
+            if(nextLocation.row == theMoves.at(i).location.row
+            && nextLocation.col == theMoves.at(i).location.col)
+            {
+               inMoves = true;
+            }
+         }
+         if(!inMoves)
+         {
+            counter += scoreDirection(otherDirection, theMoves.at(i).location);
+         }
+
+         if(counter == 6)
+         {
+            std::cout << std::endl;
+            std::cout << "QWIRKLE!!!" <<std::endl;
+
+            counter += 6;
+         }
+
+         score += counter;
+
+      }
+   }
    if (score == 0)
    {
       score ++;
@@ -502,6 +646,7 @@ int GamePlay::scoreDirection(int direction, Location location)
 {
    bool Empty = false;
    int score = 0;
+
    while(!Empty)
    {
       location.col = location.getNextCol(direction);

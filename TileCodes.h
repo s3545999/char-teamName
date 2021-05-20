@@ -73,4 +73,21 @@ struct Location
    }
 };
 
+struct Move
+{
+   Location location;
+   Tile* tile;
+
+   Move()
+   {
+
+   }
+
+   Move(Location location, Tile* tile)
+   {
+      this->location = location;
+      this->tile = tile;
+   }
+};
+
 #endif // ASSIGN1_TILECODES_H
