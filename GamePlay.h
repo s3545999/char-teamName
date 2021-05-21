@@ -39,6 +39,9 @@ class GamePlay
     bool tileFit(Tile *tile, Location location);
     bool checkBothSides(int direction1, int direction2, Location location, Tile* tile);
 
+
+    void refillHand(int playerTurn);
+
     bool compareTiles(std::vector<Tile*>* tileInLine);
     void checkDirection(int direction1, Location location, std::vector<Tile*>* tileInLine);
     bool checkIfNextToTiles(Location location);

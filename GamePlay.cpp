@@ -56,10 +56,20 @@ void GamePlay::playerMove(int playerTurn)
 
    std::vector<Move> theMoves;
    std::vector<std::string> wordsIn;
-   while (!tileReplaced && !endTurn && !menu->getQuit())
+   theMoves.empty();
+   while (!endTurn && !menu->getQuit())
    {
       wordsIn.empty();
-      if(theMoves.size() == 0)
+      if(tileReplaced)
+      {
+         std::cout << thePlayers.at(playerTurn)->getName() << ". Your hand is: " << std::endl;
+         std::cout << thePlayers.at(playerTurn)->getHand()->llToString() << std::endl;
+         std::cout << std::endl;
+         std::cout << "Use replace to replace another tile?" << std::endl;
+         std::cout << "Typing 'end' will end your turn" << std::endl;
+         wordsIn = menu->takeLineInput(' ');
+      }
+      else if(theMoves.size() == 0)
       {
          std::cout << thePlayers.at(playerTurn)->getName() << ". Your hand is: " << std::endl;
          std::cout << thePlayers.at(playerTurn)->getHand()->llToString() << std::endl;
@@ -89,7 +99,6 @@ void GamePlay::playerMove(int playerTurn)
          else if (wordsIn.size() == 2 && wordsIn[0] == "replace" && theMoves.size() == 0)
          {
             tileReplaced = replaceTile(wordsIn, playerTurn);
-            endTurn = true;
          }
          else if(wordsIn.size() == 2 && wordsIn[0] == "save")
          {
@@ -97,7 +106,7 @@ void GamePlay::playerMove(int playerTurn)
             std::cout << "Game successfully saved" <<std::endl;
             triedToSaveGame = true;
          }
-         else if(theMoves.size() != 0 && wordsIn.size() == 1 && wordsIn[0] == "end")
+         else if((theMoves.size() != 0 || tileReplaced) && wordsIn.size() == 1 && wordsIn[0] == "end")
          {
             endTurn = true;
          }
@@ -123,10 +132,18 @@ void GamePlay::playerMove(int playerTurn)
    if(!menu->getQuit())
    {
       thePlayers.at(playerTurn)->addScore(score(theMoves));
+      refillHand(playerTurn);
    }
   
 }
 
+void GamePlay::refillHand(int playerTurn)
+{
+   for(int i = thePlayers.at(playerTurn)->getHand()->getSize(); i != 6 && theBoard->getBag()->getSize() != 0; i++)
+   {
+      HandPlayerTile(playerTurn);
+   }
+}
 
 std::vector<Move> GamePlay::place(std::vector<std::string> wordsIn, int playerTurn, std::vector<Move> theMoves)
 {
@@ -378,10 +395,9 @@ bool GamePlay::replaceTile(std::vector<std::string> wordsIn, int playerTurn)
       thePlayers.at(playerTurn)->getHand()->removeAt(tileIndex);
       theBoard->getBag()->addBack(checkTile);
 
-      HandPlayerTile(playerTurn);
+      
 
       rtnReplaced = true;
-      // delete checkTile;
    }
    else if(theBoard->getBag()->getSize() == 0)
    {
@@ -537,6 +553,7 @@ bool GamePlay::saveGame(std::vector<std::string> wordsIn, int playersTurn)
    std::ofstream MyFile(fileName);
    if(!MyFile.fail())
    {
+      MyFile << thePlayers.size() << std::endl;
       for(int i =0; i< thePlayers.size(); i++)
       {
          MyFile << thePlayers.at(i)->getName() << std::endl;
@@ -564,37 +581,20 @@ bool GamePlay::saveGame(std::vector<std::string> wordsIn, int playersTurn)
 int GamePlay::score(std::vector<Move> theMoves)
 {
    int score  = 0;
-   Location nextLocation;
+   Location D1nextLocation;
+   Location D2nextLocation;
    bool inMoves = false;
+   int otherDirection;
+   int D1Score;
+   int D2Score;
 
-   score += theMoves.size();
-   if(theMoves.size() == 6)
-   {
-      std::cout << std::endl;
-      std::cout << "QWIRKLE!!!" <<std::endl;
-   }
    for(int i = 0; i < theMoves.size(); i++)
    {
       for (int direction = UP; direction <= RIGHT; direction++)
       {
+         inMoves = false;
          int counter = 0;
-         nextLocation.row = theMoves.at(i).location.getNextRow(direction);
-         nextLocation.col = theMoves.at(i).location.getNextCol(direction);
          
-         for(int j = 0; j < theMoves.size(); j++)
-         {
-            if(nextLocation.row == theMoves.at(j).location.row
-            && nextLocation.col == theMoves.at(j).location.col)
-            {
-               inMoves = true;
-            }
-         }
-         if(!inMoves)
-         {
-            counter += scoreDirection(direction, nextLocation);
-         }
-
-         int otherDirection;
          
          if (direction == UP)
          {
@@ -605,20 +605,42 @@ int GamePlay::score(std::vector<Move> theMoves)
             otherDirection = LEFT;
          }
 
-         for(int j = 0; j < theMoves.size(); j++)
-         {
-            nextLocation.row = theMoves.at(i).location.getNextRow(otherDirection);
-            nextLocation.col = theMoves.at(i).location.getNextCol(otherDirection);
+         D1nextLocation.row = theMoves.at(i).location.getNextRow(direction);
+         D1nextLocation.col = theMoves.at(i).location.getNextCol(direction); 
 
-            if(nextLocation.row == theMoves.at(i).location.row
-            && nextLocation.col == theMoves.at(i).location.col)
+         D2nextLocation.row = theMoves.at(i).location.getNextRow(otherDirection);
+         D2nextLocation.col = theMoves.at(i).location.getNextCol(otherDirection);
+
+         for(int j = 0; j < theMoves.size() && !inMoves; j++)
+         {
+
+            if(D1nextLocation.row == theMoves.at(j).location.row
+            && D1nextLocation.col == theMoves.at(j).location.col)
+            {
+               inMoves = true;
+            }
+
+            if(D2nextLocation.row == theMoves.at(j).location.row
+            && D2nextLocation.col == theMoves.at(j).location.col)
             {
                inMoves = true;
             }
          }
          if(!inMoves)
          {
-            counter += scoreDirection(otherDirection, theMoves.at(i).location);
+            D1Score = scoreDirection(direction, theMoves.at(i).location);
+            if(D1Score > 0)
+            {
+               D1Score ++;
+            }
+            D2Score = scoreDirection(otherDirection, theMoves.at(i).location);
+
+            if(D2Score > 0)
+            {
+               D2Score ++;
+            }
+            counter = counter + D1Score;
+            counter = counter + D2Score;
          }
 
          if(counter == 6)
@@ -628,14 +650,74 @@ int GamePlay::score(std::vector<Move> theMoves)
 
             counter += 6;
          }
-
          score += counter;
-
       }
    }
-   if (score == 0)
+   
+
+   if(theMoves.size() > 1)
    {
-      score ++;
+      int counter = 0;
+      
+      for(int i = 0; i < theMoves.size(); i++)
+      {
+         for (int direction = UP; direction <= RIGHT; direction++)
+         {
+            if (direction == UP)
+            {
+               otherDirection = DOWN;
+            }
+            else if (direction == RIGHT)
+            {
+               otherDirection = LEFT;
+            }
+
+            D1nextLocation.row = theMoves.at(i).location.getNextRow(direction);
+            D1nextLocation.col = theMoves.at(i).location.getNextCol(direction);
+
+            D2nextLocation.row = theMoves.at(i).location.getNextRow(otherDirection);
+            D2nextLocation.col = theMoves.at(i).location.getNextCol(otherDirection);
+
+
+            bool thisLineD1 = false;
+            bool thisLineD2 = false;
+
+            for(int j = 0; j < theMoves.size(); j++)
+            {
+               if(D1nextLocation.row == theMoves.at(j).location.row
+               && D1nextLocation.col == theMoves.at(j).location.col)
+               {
+                  thisLineD1 = true;
+               }
+
+               if(D2nextLocation.row == theMoves.at(j).location.row
+               && D2nextLocation.col == theMoves.at(j).location.col)
+               {
+                  thisLineD2 = true;
+               }
+            }
+
+            if(thisLineD1 && !thisLineD2)
+            {
+               counter += scoreDirection(otherDirection, theMoves.at(i).location);
+            }
+            else if(!thisLineD1 && thisLineD2)
+            {
+               counter += scoreDirection(direction, theMoves.at(i).location);
+            }
+            
+         }
+      }
+
+      counter += theMoves.size();
+      if(counter == 6)
+      {
+         std::cout << std::endl;
+         std::cout << "QWIRKLE!!!" <<std::endl;
+
+         counter += 6;
+      }
+      score += counter;
    }
    
    return score;
@@ -664,7 +746,6 @@ int GamePlay::scoreDirection(int direction, Location location)
          Empty = true;
       }
    }
-
    return score;
 }
 

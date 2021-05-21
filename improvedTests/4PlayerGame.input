@@ -1,0 +1,45 @@
+2
+improvedTests/4PlayerGame
+place B1 at R10
+place B2 at R11
+place B4 at R12
+end
+place G1 at S10
+place Y1 at T10
+end
+place B3 at R9
+place B6 at R8
+end
+place R4 at Q12
+end
+place Y3 at T11
+place Y2 at T12
+end
+place R2 at U12
+end
+place G2 at U13
+place G3 at V13
+end
+place P2 at U14
+place B2 at T14
+end
+place Y5 at T9
+end
+place O5 at U9
+place G5 at U8
+end
+place Y6 at Q8
+place P6 at Q7
+end
+place B6 at Q6
+place Y6 at P6
+end
+place G6 at Q5
+place R6 at Q4
+end
+replace P3
+replace O5
+end
+save improvedTests/quirkle
+place O6 at Q3
+end
