@@ -53,11 +53,11 @@ void GamePlay::playerMove(int playerTurn)
    bool gameSaved = false;
    bool triedToSaveGame = false;
    bool endTurn = false;
-
+   
    std::vector<Move> theMoves;
    std::vector<std::string> wordsIn;
    theMoves.empty();
-   while (!endTurn && !menu->getQuit())
+   while (!endTurn && !menu->getQuit() && thePlayers.at(playerTurn)->getHand()->getSize() != 0)
    {
       wordsIn.empty();
       if(tileReplaced)
@@ -87,14 +87,19 @@ void GamePlay::playerMove(int playerTurn)
          std::cout << "Typing 'end' will end your turn" << std::endl;
          wordsIn = menu->takeLineInput(' ');
       }
-
       triedToSaveGame = false;
 
       if (!menu->getQuit())
       {  
          if (wordsIn.size() == 4 && wordsIn[0] == "place" && wordsIn[2] == "at")
          {
+            int numMoves = theMoves.size();
             theMoves = place(wordsIn, playerTurn, theMoves);
+            if (theMoves.size() == numMoves)
+            {
+               std::cout << "Incorrect Input" << std::endl;
+               failPlace = true;
+            }
          }
          else if (wordsIn.size() == 2 && wordsIn[0] == "replace" && theMoves.size() == 0)
          {
@@ -157,6 +162,10 @@ std::vector<Move> GamePlay::place(std::vector<std::string> wordsIn, int playerTu
       {
          Move move(location, tile);
          moves.push_back(move);
+      }
+      else
+      {
+         
       }
    }
    return moves;

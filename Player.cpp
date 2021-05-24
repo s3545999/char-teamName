@@ -7,6 +7,13 @@ Player::Player(std::string name)
    hand = new LinkedList();
 }
 
+Player::Player(std::string name, int score)
+{
+   this->name = name;
+   this->score = score;
+   hand = nullptr;
+}
+
 Player::Player(std::string name, int score, LinkedList* hand)
 {
    this->name = name;
@@ -20,9 +27,9 @@ Player::~Player()
    hand = nullptr;
 }
 
-bool Player::operator > (const Player& player) const
+bool Player::operator < (const Player& player) const
 {
-   return score > player.score;
+   return (player.score < score);
 }
 
 

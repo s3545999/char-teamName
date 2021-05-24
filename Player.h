@@ -9,12 +9,13 @@
 class Player{
 public:
    Player(std::string name);
+   Player(std::string name, int score);
    Player(std::string name, int score, LinkedList* hand);
    ~Player();
 
    std::string getName();
    
-   bool operator > (const Player& player) const;
+   bool operator<(const Player& player) const;
    int getScore();
 
    int getNumber();

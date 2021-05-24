@@ -19,8 +19,8 @@ void handingTilesToPlayers(std::vector<Player* > thePlayers, Board *theBoard);
 void playingTheGame(GamePlay* gameTime, int playersTurn);
 Player* loadInPlayer(std::ifstream& saveFile, Menu* menu);
 Board* loadInBoard(std::ifstream& saveFile, Menu* menu);
-std::vector<std::string> splitString(std::string string, std::string delim);
 void onePlayerTurn(GamePlay* gameTime, int currentTurn);
+bool addToHighscore(GamePlay* gameTime);
 
 int main(void)
 {
@@ -61,6 +61,10 @@ int main(void)
          }
          else if (userInput == "4")
          {
+            gameTime->getMenu()->printHighscores();
+         }
+         else if (userInput == "5")
+         {
             gameTime->getMenu()->setQuit(true);
          }
          else
@@ -82,42 +86,44 @@ void NewGame(GamePlay* gameTime)
 {
    std::vector<Player* > thePlayers;
 
+   std::cout << std::endl;
+   std::cout << "How many players want to play?" << std::endl;
+   std::string numPlayers;
+
    bool playersChosen = false;
-   while(!playersChosen)
+   while(!playersChosen && !gameTime->getMenu()->getQuit())
    {
-
-      std::cout << std::endl;
-      std::cout << "How many players want to play?" << std::endl;
       std::vector<std::string> NumPlayersVect = gameTime->getMenu()->takeLineInput(' ');
-      std::string numPlayers = NumPlayersVect[0];
 
-      if(NumPlayersVect.size() == 1 && NumPlayersVect[0].size() == 1 && (numPlayers == "2" || numPlayers == "3" || numPlayers == "4"))
+      if(NumPlayersVect.size() == 1 && NumPlayersVect[0].size() == 1)
       {
-         if (gameTime->getMenu()->getQuit() != true)
+         numPlayers = NumPlayersVect[0];
+         if (numPlayers == "2" || numPlayers == "3" || numPlayers == "4")
          {
-            std::string numPlayers = NumPlayersVect[0];
-
-            int numOfPlayers = gameTime->getMenu()->charToInt(numPlayers[0]);
-            std::cout << numOfPlayers << std::endl;
-            thePlayers = getPlayerNames(numOfPlayers, gameTime);
-            Board *board = new Board();
-            std::vector<Tile *> tPtrs = initialiseTileBag();
-            LinkedList* bag = new LinkedList();
-            board->setBag(bag);
-
-            for (Tile *tile : tPtrs)
+            if (gameTime->getMenu()->getQuit() != true)
             {
-               board->getBag()->addFront(tile);
-            }
-            
-            handingTilesToPlayers(thePlayers, board);
-            gameTime->setPlayer(thePlayers);
-            gameTime->setBoard(board);
-            playingTheGame(gameTime, 0);
-         }
+               std::string numPlayers = NumPlayersVect[0];
 
+               int numOfPlayers = gameTime->getMenu()->charToInt(numPlayers[0]);
+               thePlayers = getPlayerNames(numOfPlayers, gameTime);
+               Board *board = new Board();
+               std::vector<Tile *> tPtrs = initialiseTileBag();
+               LinkedList* bag = new LinkedList();
+               board->setBag(bag);
+
+               for (Tile *tile : tPtrs)
+               {
+                  board->getBag()->addFront(tile);
+               }
+               playersChosen = true;
+               handingTilesToPlayers(thePlayers, board);
+               gameTime->setPlayer(thePlayers);
+               gameTime->setBoard(board);
+               playingTheGame(gameTime, 0);
+            }
+         }
       }
-      else
+      if(!gameTime->getMenu()->getQuit() && !playersChosen)
       {
          std::cout << "Incorrect input" << std::endl;
       }
@@ -127,9 +133,11 @@ void NewGame(GamePlay* gameTime)
 std::vector<Player* > getPlayerNames(int numPlayers, GamePlay* gameTime)
 {
    std::vector<Player* > thePlayers;
-   for (int i = 0; i != numPlayers && gameTime->getMenu()->getQuit() == false; i++)
+   for (int i = 0; i != numPlayers && 
+   gameTime->getMenu()->getQuit() == false; i++)
    {
-      std::cout << "Enter a name for Player " << i + 1 << " (uppercase characters only)" << std::endl;
+      std::cout << "Enter a name for Player " << i + 1 
+      << " (uppercase characters only)" << std::endl;
 
       std::string name = gameTime->getMenu()->getName();
       if (!gameTime->getMenu()->getQuit())
@@ -214,7 +222,8 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
 
             std::cout << std::endl;
             std::cout << "You have no legal moves" << std::endl;
-            std::cout << "Therefore the game is over!" << std::endl << std::endl;
+            std::cout << "Therefore the game is over!" << std::endl;
+            std::cout << std::endl;
          }
       }
       currentTurn = 0;
@@ -223,19 +232,67 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
    if (!gameTime->getMenu()->getQuit())
    {
       gameTime->handOutBonusPoints();
-      
-      std::sort(gameTime->getPlayers().begin(), gameTime->getPlayers().end());
-      
-      std::cout << "Congratulations " << gameTime->getPlayers().at(0)->getName()
-       << " won with a score of: " << gameTime->getPlayers().at(0)->getScore() << std::endl;
-      for(int i = 1; i < gameTime->getPlayers().size(); i++)
+      std::vector<Player> players;
+      for(int i = 0; i< gameTime->getPlayers().size(); i++)
       {
-         std::cout << "Better luck next time " << gameTime->getPlayers().at(i)->getName() 
-         << " you finished with a score of: " 
-         << gameTime->getPlayers().at(i)->getScore() << std::endl;
+         Player player(gameTime->getPlayers().at(i)->getName(), gameTime->getPlayers().at(i)->getScore());
+         players.push_back(player);
       }
+
+      std::sort(players.begin(), players.end());
+      
+      std::cout << "Congratulations " << 
+      players.at(0).getName() << " won with a score of: " 
+      << players.at(0).getScore() << std::endl;
+      for(int i = 1; i < players.size(); i++)
+      {
+         std::cout << "Better luck next time " << 
+         players.at(i).getName() 
+         << " you finished with a score of: " 
+         << players.at(i).getScore() << std::endl;
+      }
+
+      if(addToHighscore(gameTime))
+      {
+         std::cout << "Highscores Added" << std::endl;
+         gameTime->getMenu()->addToHighscores(gameTime->getPlayers());
+      }
+      
+
       gameTime->getMenu()->setQuit(true);
    }
+}
+
+
+
+bool addToHighscore(GamePlay* gameTime)
+{
+   bool done = false;
+   bool add = false;
+
+   std::cout << "Do you want to add to the highscores? "<< std::endl;
+   std::cout << "'Yes' or 'No' "<< std::endl;
+   
+
+   while(!done && !gameTime->getMenu()->getQuit())
+   {
+      std::vector<std::string> input = gameTime->getMenu()->takeLineInput(' ');
+      if(input.size() == 1 && input.at(0) == "Yes")
+      {
+         done = true;
+         add = true;
+      }
+      else if (input.size() == 1 && input.at(0) == "No")
+      {
+         done = true;
+      }
+      else
+      {
+         std::cout << "Incorrect input" << std::endl;
+         std::cout << "Please input 'Yes' or 'No'" << std::endl;
+      }
+   }
+   return add;
 }
 
 // Start of a players turn
@@ -245,20 +302,20 @@ void onePlayerTurn(GamePlay* gameTime, int playersTurn)
    std::cout << gameTime->getPlayers().at(playersTurn)->getName() << 
    " it is your turn" << std::endl;
 
-   std::cout << gameTime->getPlayers().at(playersTurn)->getName() << "'s score: " << 
-   gameTime->getPlayers().at(playersTurn)->getScore() << std::endl;
+   std::cout << gameTime->getPlayers().at(playersTurn)->getName() 
+   << "'s score: " << gameTime->getPlayers().at(playersTurn)->getScore() 
+   << std::endl;
 
    for (int i = 0; i <gameTime->getPlayers().size(); i++)
    {
       if (i != playersTurn)
       {
-         std::cout << gameTime->getPlayers().at(i)->getName() << "'s score: " << 
+         std::cout << gameTime->getPlayers().at(i)->getName()
+         << "'s score: " << 
          gameTime->getPlayers().at(i)->getScore() << std::endl;
       }
    }
-  
    gameTime->getBoard()->toString();
-
    gameTime->playerMove(playersTurn);
 }
 
@@ -323,10 +380,7 @@ Player* loadInPlayer(std::ifstream& saveFile, Menu* menu)
    std::string playerScore = "";
    std::string playerHand = "";
    std::vector<std::string> playerHandVector;
-   int player1score= 0;
-   int hundreds= 0;
-   int tens = 0;
-   int ones = 0;
+   int player1score = 0;
 
    //Read data for player one
    if (saveFile.is_open())
@@ -335,26 +389,9 @@ Player* loadInPlayer(std::ifstream& saveFile, Menu* menu)
       std::getline(saveFile, playerScore);
       std::getline(saveFile, playerHand);
    }
+   player1score = menu->StringToInt(playerScore);
 
-   if (playerScore.size() == 3)
-   {
-      hundreds = menu->charToInt(playerScore[0]);
-      tens = menu->charToInt(playerScore[1]);
-      ones = menu->charToInt(playerScore[2]);
-      player1score = (100*hundreds)+(10 * tens) + (ones);
-   }
-   else if(playerScore.size() == 2)
-   {
-      tens = menu->charToInt(playerScore[0]);
-      ones = menu->charToInt(playerScore[1]);
-      player1score = (10 * tens) + (ones);
-   }
-   else
-   {
-      player1score = ones;
-   }
-   
-   playerHandVector = splitString(playerHand, ",");
+   playerHandVector = menu->splitString(playerHand, ",");
 
    LinkedList* player1Hand = new LinkedList();
    for (unsigned int i =0; i < playerHandVector.size(); i++)
@@ -392,14 +429,13 @@ Board* loadInBoard(std::ifstream& saveFile, Menu* menu)
       std::getline(saveFile, locations);
       std::getline(saveFile, theBagString);
    }
-   boardDimentions = splitString(dimentions, ",");
-   locationsW = splitString(locations, ", ");
+   boardDimentions = menu->splitString(dimentions, ",");
+   locationsW = menu->splitString(locations, ", ");
    
    if (boardDimentions.size() ==2)
    {
       row = menu->charToInt(boardDimentions[0][0]);
       col = menu->charToInt(boardDimentions[1][0]);
-
    }
    
    for (unsigned int i =0; i < locationsW.size(); i++)
@@ -411,22 +447,27 @@ Board* loadInBoard(std::ifstream& saveFile, Menu* menu)
       
       row = (int)locationsW[i][3] - ASCII_A;
       //changes input location to board location
+
+      int tens;
+      int ones;
+      int numInt;
+
       if (locationsW[i].size() == 6)
       {
-         int tens = menu->charToInt(locationsW[i][4]);
-         int ones = menu->charToInt(locationsW[i][5]) - INDEXING;
-         col = 10 * tens + ones;
+         tens = menu->charToInt(locationsW[i][4]);
+         ones = menu->charToInt(locationsW[i][5]) - INDEXING;
+         numInt = (10 * tens) + (ones);
       }
       else
       {
-
-         col = menu->charToInt(locationsW[i][4]) - INDEXING;
+         numInt = menu->charToInt(locationsW[i][4]) - INDEXING;
       }
+      col = numInt;
+
       Location location(row,col);
       theBoard->placeTile(tile, location);
-      // delete tile;
    }
-   bagTiles = splitString(theBagString, ",");
+   bagTiles = menu->splitString(theBagString, ",");
 
    for (unsigned int i =0; i < bagTiles.size(); i++)
    {
@@ -442,35 +483,3 @@ Board* loadInBoard(std::ifstream& saveFile, Menu* menu)
    return theBoard;
 }
 
-// Splits a string by a character inputted, returns a vector
-std::vector<std::string> splitString(std::string string, std::string delim)
-{
-   std::vector<std::string> playerHandVector;
-   if(string != "")
-   {
-      int start = 0;
-      int end = string.find(delim);
-      int length = string.size();
-      std::string word;
-      if(end != -1)
-      {
-         while(end != -1)
-         {
-            word = string.substr(start, end - start);
-            playerHandVector.push_back(word);
-            start = end + delim.size();
-            end= string.find(delim, start);
-         }
-         
-         word = string.substr(start, length);
-         playerHandVector.push_back(word);
-      }
-      else
-      {
-         playerHandVector.push_back(string);
-      }
-   }
-   
-   
-   return playerHandVector;
-}

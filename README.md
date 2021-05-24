@@ -8,7 +8,13 @@
 | Aidan McGinniss  | s3545999 | s3545999@student.rmit.edu.au|
 | Shewit Tikue | s3545853 | s3545853@student.rmit.edu.au|
 | Hamida Ehsani | s3653728 | s3653728@student.rmit.edu.au|
+
+
 </br>
+<hr></hr>
+
+## This version includes enhancements by Aidan McGinniss
+
 <hr></hr>
 
 ## How to run the program
@@ -38,7 +44,7 @@ diff -w tests/<testname>.output tests/<testname>.gameout
 
 
 - **EOF -** The purpose of this test is to check if the program ends with `>GoodBye` when the program is terminated by the `EOF` character. Since all linux files have end of file characters running this test is super simple the program will run till there is some text in the `.input` file. This is the same case for all the other test cases as well. To run this test run the following command:
-    - `./qwirkle <tests/EOF.input`
+    - `./qwirkle <improvedTests/EOF.input`
 
 - **cornerTesting -** This test contains all tiles places in the 4 corners of the board. This position would not be possible to reach threw a new game and is only for testing purposes. The primary purpose of this test was to check whether placing the tiles in any edge would cause to crash the program. This test case alse checks that the player who first finishes the game is awarded an additional 6 points. To run this test run the following command:
     - `./qwirkle <tests/cornerTesting.input`

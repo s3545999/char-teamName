@@ -2,6 +2,8 @@
 #ifndef ASSIGN1_TILECODES_H
 #define ASSIGN1_TILECODES_H
 
+#include "Tile.h"
+
 // Colours
 #define RED 'R'
 #define ORANGE 'O'

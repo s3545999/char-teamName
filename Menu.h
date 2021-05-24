@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include "TileCodes.h"
+#include "Player.h"
 
 class Menu{
     public:
@@ -21,8 +22,13 @@ class Menu{
 
     std::string getName();
     int charToInt(char character);
+    int StringToInt(std::string number);
 
+    void printHighscores();
+    std::vector<Player> readInHighscores();
+    void addToHighscores(std::vector<Player* > newPlayers);
 
+    std::vector<std::string> splitString(std::string string, std::string delim);
 
     private:
     bool quit;
