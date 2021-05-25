@@ -1,7 +1,5 @@
 2
-improvedTests/EOF
+tests/EOF
 place G6 at O11
-end
 place O6 at O12
-end
 place O2 at N12

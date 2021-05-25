@@ -53,7 +53,7 @@ void GamePlay::playerMove(int playerTurn)
    bool gameSaved = false;
    bool triedToSaveGame = false;
    bool endTurn = false;
-   
+
    std::vector<Move> theMoves;
    std::vector<std::string> wordsIn;
    theMoves.empty();
@@ -98,7 +98,6 @@ void GamePlay::playerMove(int playerTurn)
             if (theMoves.size() == numMoves)
             {
                std::cout << "Incorrect Input" << std::endl;
-               failPlace = true;
             }
          }
          else if (wordsIn.size() == 2 && wordsIn[0] == "replace" && theMoves.size() == 0)

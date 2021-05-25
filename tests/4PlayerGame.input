@@ -1,5 +1,5 @@
 2
-improvedTests/4PlayerGame
+Tests/4PlayerGame
 place B1 at R10
 place B2 at R11
 place B4 at R12
@@ -111,4 +111,4 @@ end
 place P4 at Y9
 end
 place B4 at Z9
-end
+No
