@@ -1,0 +1,21 @@
+Welcome to Qwirkle!
+-------------------
+
+Menu
+----
+1. New Game
+2. Load Game
+3. Credits (Show student information)
+4. Highscores
+5. Quit
+
+> Enter the filename from which to load a game
+> 
+You have no legal moves
+Therefore the game is over!
+
+Congratulations LELOUCH won with a score of: 12
+Better luck next time CAPONE you finished with a score of: 11
+Do you want to add to the highscores? 
+'Yes' or 'No' 
+> GoodBye!

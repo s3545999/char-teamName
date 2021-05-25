@@ -100,7 +100,7 @@ void GamePlay::playerMove(int playerTurn)
                std::cout << "Incorrect Input" << std::endl;
             }
          }
-         else if (wordsIn.size() == 2 && wordsIn[0] == "replace" && theMoves.size() == 0)
+         else if (wordsIn.size() == 2 && wordsIn[0] == "replace" && theMoves.size() == 0 && thePlayers.at(playerTurn)->getHand()->getSize() == 6)
          {
             tileReplaced = replaceTile(wordsIn, playerTurn);
          }
@@ -637,15 +637,12 @@ int GamePlay::score(std::vector<Move> theMoves)
          if(!inMoves)
          {
             D1Score = scoreDirection(direction, theMoves.at(i).location);
-            if(D1Score > 0)
-            {
-               D1Score ++;
-            }
+            
             D2Score = scoreDirection(otherDirection, theMoves.at(i).location);
 
-            if(D2Score > 0)
+            if(D2Score > 0 || D1Score > 0)
             {
-               D2Score ++;
+               ++counter;
             }
             counter = counter + D1Score;
             counter = counter + D2Score;

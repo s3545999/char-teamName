@@ -1,0 +1,26 @@
+2
+tests/tilePlacement
+place O1 at O10
+end
+place O2 at O11
+end
+place O3 at O12
+place O5 at O13
+end
+place O4 at O14
+place O6 at O15
+end
+place R1 at N10
+place R2 at N9
+place R3 at N8
+end
+place G6 at N15
+place G4 at N16
+place G2 at N17
+end
+place R2 at O17
+place R1 at O18
+place R3 at O19
+place R6 at O20
+place R5 at O21
+place R4 at O22
