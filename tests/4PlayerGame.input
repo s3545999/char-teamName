@@ -40,7 +40,6 @@ end
 replace P3
 replace O5
 end
-save improvedTests/quirkle
 place O6 at Q3
 end
 place Y4 at P12
@@ -49,8 +48,8 @@ end
 place O4 at O12
 place G4 at N12
 end
+save Tests/quirkle
 place G5 at N13
-place G6 at N14
 end
 place R2 at R4
 place R1 at S4
@@ -58,57 +57,16 @@ end
 place P5 at U7
 place R5 at U6
 end
-place P4 at M12
+place G2 at V8
+place G3 at W8
 end
-place B5 at U5
+place O5 at P3
+place O2 at O3
+place O4 at N3
 end
-place Y1 at P13
+place Y4 at N2
+place Y1 at M2
 end
-place G1 at S3
-place O1 at S2
+place P5 at V6
+place P6 at V5
 end
-place O3 at O11
-place O1 at O10
-place O6 at O9
-end
-place R3 at P4
-end
-place B5 at V8
-place P5 at W8
-place R5 at X8
-end
-place R1 at X7
-place R6 at X6
-end
-place R3 at W6
-place G3 at W5
-end
-place O2 at O8
-place O4 at N8
-end
-place Y5 at U4
-place Y4 at V4
-end
-place O5 at O7
-end
-place Y2 at U15
-place G2 at V15
-end
-place P3 at M11
-end
-place P1 at M10
-place P2 at L10
-place P3 at K10
-end
-place B4 at V3
-end
-place P3 at K10
-end
-place O3 at R2
-end
-place R4 at X9
-end
-place P4 at Y9
-end
-place B4 at Z9
-No

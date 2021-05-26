@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 Menu::Menu()
 {
@@ -180,7 +181,7 @@ void Menu::printHighscores()
    std::cout << "Highscores:" << std::endl;
    std::vector<Player> players = readInHighscores();
    std::sort(players.begin(), players.end());
-   for(int i = 0; i < players.size(); i++)
+   for(unsigned int i = 0; i < players.size(); i++)
    {
       std::cout << players.at(i).getName() << " " <<
       players.at(i).getScore() << std::endl;
@@ -210,7 +211,7 @@ void Menu::addToHighscores(std::vector<Player* > newPlayers)
 {
    std::vector<Player> oldPlayers = readInHighscores();
 
-   for(int i = 0; i < newPlayers.size(); i++)
+   for(unsigned int i = 0; i < newPlayers.size(); i++)
    {
       Player player (newPlayers.at(i)->getName(), newPlayers.at(i)->getScore());
       oldPlayers.push_back(player);
@@ -221,7 +222,7 @@ void Menu::addToHighscores(std::vector<Player* > newPlayers)
 
    if(!MyFile.fail())
    {
-      for(int i = 0; i < oldPlayers.size() && i < 10; i++)
+      for(unsigned int i = 0; i < oldPlayers.size() && i < 10; i++)
       {
          MyFile << oldPlayers.at(i).getName() << ": " << oldPlayers.at(i).getScore() << std::endl;
       }

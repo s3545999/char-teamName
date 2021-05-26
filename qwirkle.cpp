@@ -180,12 +180,12 @@ std::vector<Tile *> initialiseTileBag()
 // Places tiles from the bag into players hand
 void handingTilesToPlayers(std::vector<Player* > thePlayers, Board *theBoard)
 {
-   if (theBoard->getBag()->getSize() >= thePlayers.size() * 6)
+   if ((unsigned int)theBoard->getBag()->getSize() >= thePlayers.size() * 6)
    {
       Tile *theTile;
       for (int i = 0; i < 6; i++)
       {
-         for (int j = 0; j < thePlayers.size(); j++)
+         for (unsigned int j = 0; j < thePlayers.size(); j++)
          {
             theTile = theBoard->getBag()->getFront();
             thePlayers.at(j)->getHand()->addFront(theTile);
@@ -203,7 +203,7 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
    while (!gameTime->getMenu()->getQuit() && !gameover)
    {
       for(currentTurn = playersTurn; 
-      currentTurn < gameTime->getPlayers().size() && !gameover && 
+      (unsigned int)currentTurn < gameTime->getPlayers().size() && !gameover && 
       !gameTime->getMenu()->getQuit(); currentTurn++)
       {
          playersTurn = 0;
@@ -233,7 +233,7 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
    {
       gameTime->handOutBonusPoints();
       std::vector<Player> players;
-      for(int i = 0; i< gameTime->getPlayers().size(); i++)
+      for(unsigned int i = 0; i< gameTime->getPlayers().size(); i++)
       {
          Player player(gameTime->getPlayers().at(i)->getName(), gameTime->getPlayers().at(i)->getScore());
          players.push_back(player);
@@ -244,7 +244,7 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
       std::cout << "Congratulations " << 
       players.at(0).getName() << " won with a score of: " 
       << players.at(0).getScore() << std::endl;
-      for(int i = 1; i < players.size(); i++)
+      for(unsigned int i = 1; i < players.size(); i++)
       {
          std::cout << "Better luck next time " << 
          players.at(i).getName() 
@@ -306,9 +306,9 @@ void onePlayerTurn(GamePlay* gameTime, int playersTurn)
    << "'s score: " << gameTime->getPlayers().at(playersTurn)->getScore() 
    << std::endl;
 
-   for (int i = 0; i <gameTime->getPlayers().size(); i++)
+   for (unsigned int i = 0; i <gameTime->getPlayers().size(); i++)
    {
-      if (i != playersTurn)
+      if (i != (unsigned int)playersTurn)
       {
          std::cout << gameTime->getPlayers().at(i)->getName()
          << "'s score: " << 
@@ -357,7 +357,7 @@ void LoadGame(GamePlay* play)
          play->setPlayer(thePlayers);
          play->setBoard(theBoard);
 
-         for(int i = 0; i < thePlayers.size(); i++)
+         for(unsigned int i = 0; i < thePlayers.size(); i++)
          {
             if(thePlayers.at(i)->getName() == playerTurn)
             {

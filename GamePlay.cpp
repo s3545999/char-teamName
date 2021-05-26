@@ -95,7 +95,7 @@ void GamePlay::playerMove(int playerTurn)
          {
             int numMoves = theMoves.size();
             theMoves = place(wordsIn, playerTurn, theMoves);
-            if (theMoves.size() == numMoves)
+            if (theMoves.size() == (unsigned int)numMoves)
             {
                std::cout << "Incorrect Input" << std::endl;
             }
@@ -138,7 +138,7 @@ void GamePlay::playerMove(int playerTurn)
       thePlayers.at(playerTurn)->addScore(score(theMoves));
       refillHand(playerTurn);
    }
-  
+   // theMoves.clear();
 }
 
 void GamePlay::refillHand(int playerTurn)
@@ -328,7 +328,7 @@ bool GamePlay::checkNextTo(std::vector<Move> theMoves, Tile* tile, Location loca
    Location nextLoc;
    if(theMoves.size() != 0)
    {
-      for(int i = 0; i< theMoves.size(); i++)
+      for(unsigned int i = 0; i< theMoves.size(); i++)
       {
          if(location.col != theMoves.at(i).location.col)
          {
@@ -562,7 +562,7 @@ bool GamePlay::saveGame(std::vector<std::string> wordsIn, int playersTurn)
    if(!MyFile.fail())
    {
       MyFile << thePlayers.size() << std::endl;
-      for(int i =0; i< thePlayers.size(); i++)
+      for(unsigned int i =0; i< thePlayers.size(); i++)
       {
          MyFile << thePlayers.at(i)->getName() << std::endl;
          MyFile << thePlayers.at(i)->getScore() << std::endl;
@@ -596,7 +596,7 @@ int GamePlay::score(std::vector<Move> theMoves)
    int D1Score;
    int D2Score;
 
-   for(int i = 0; i < theMoves.size(); i++)
+   for(unsigned int i = 0; i < theMoves.size(); i++)
    {
       for (int direction = UP; direction <= RIGHT; direction++)
       {
@@ -619,7 +619,7 @@ int GamePlay::score(std::vector<Move> theMoves)
          D2nextLocation.row = theMoves.at(i).location.getNextRow(otherDirection);
          D2nextLocation.col = theMoves.at(i).location.getNextCol(otherDirection);
 
-         for(int j = 0; j < theMoves.size() && !inMoves; j++)
+         for(unsigned int j = 0; j < theMoves.size() && !inMoves; j++)
          {
 
             if(D1nextLocation.row == theMoves.at(j).location.row
@@ -664,7 +664,7 @@ int GamePlay::score(std::vector<Move> theMoves)
    {
       int counter = 0;
       
-      for(int i = 0; i < theMoves.size(); i++)
+      for(unsigned int i = 0; i < theMoves.size(); i++)
       {
          for (int direction = UP; direction <= RIGHT; direction++)
          {
@@ -687,7 +687,7 @@ int GamePlay::score(std::vector<Move> theMoves)
             bool thisLineD1 = false;
             bool thisLineD2 = false;
 
-            for(int j = 0; j < theMoves.size(); j++)
+            for(unsigned int j = 0; j < theMoves.size(); j++)
             {
                if(D1nextLocation.row == theMoves.at(j).location.row
                && D1nextLocation.col == theMoves.at(j).location.col)
@@ -756,7 +756,7 @@ int GamePlay::scoreDirection(int direction, Location location)
 
 void GamePlay::handOutBonusPoints()
 {
-   for(int i = 0; i< thePlayers.size(); i++)
+   for(unsigned int i = 0; i< thePlayers.size(); i++)
    {
       if(thePlayers.at(i)->getHand()->getSize() == 0)
       {
