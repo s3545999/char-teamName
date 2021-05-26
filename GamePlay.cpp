@@ -11,6 +11,11 @@ GamePlay::~GamePlay()
 {
    delete theBoard;
    theBoard = nullptr;
+   for (unsigned int i =0; i< thePlayers.size(); i++)
+   {
+      delete thePlayers.at(i);
+   }
+   thePlayers.clear();
    delete menu;
    menu = nullptr;
 }
@@ -138,7 +143,11 @@ void GamePlay::playerMove(int playerTurn)
       thePlayers.at(playerTurn)->addScore(score(theMoves));
       refillHand(playerTurn);
    }
-   // theMoves.clear();
+   for (unsigned int i = 0; i < theMoves.size(); i++)
+   {
+      delete theMoves.at(i).tile;
+   }
+   theMoves.clear();
 }
 
 void GamePlay::refillHand(int playerTurn)
@@ -164,7 +173,7 @@ std::vector<Move> GamePlay::place(std::vector<std::string> wordsIn, int playerTu
       }
       else
       {
-         
+         delete tile;
       }
    }
    return moves;
