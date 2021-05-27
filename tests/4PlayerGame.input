@@ -35,7 +35,6 @@ place B6 at Q6
 place Y6 at P6
 end
 place G6 at Q5
-save Tests/Qtest
 place R6 at Q4
 end
 replace P3
