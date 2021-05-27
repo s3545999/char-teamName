@@ -1,6 +1,5 @@
 #include "Menu.h"
 
-
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -9,7 +8,6 @@ Menu::Menu()
 {
    quit = false;
 }
-
 
 bool Menu::getQuit()
 {
@@ -33,28 +31,39 @@ void Menu::printMenu()
    std::cout << std::endl;
 }
 
-// Prints the credits 
+// Prints the credits
 void Menu::printCredits()
 {
    std::cout << "CREDITS" << std::endl;
    std::cout << "-------------------------------------------" << std::endl;
-   std::cout << "Name:       " << "Aidan McGinniss" << std::endl;
-   std::cout << "Student Id: " << "s3545999" << std::endl;
-   std::cout << "Email:      " << "s3545999@student.rmit.edu.au" << std::endl;
+   std::cout << "Name:       "
+             << "Aidan McGinniss" << std::endl;
+   std::cout << "Student Id: "
+             << "s3545999" << std::endl;
+   std::cout << "Email:      "
+             << "s3545999@student.rmit.edu.au" << std::endl;
    std::cout << std::endl;
-   std::cout << "Name:       " << "Ashwin Venkita Subharaman" << std::endl;
-   std::cout << "Student Id: " << "s3783614" << std::endl;
-   std::cout << "Email:      " << "s3783614@student.rmit.edu.au" << std::endl;
+   std::cout << "Name:       "
+             << "Ashwin Venkita Subharaman" << std::endl;
+   std::cout << "Student Id: "
+             << "s3783614" << std::endl;
+   std::cout << "Email:      "
+             << "s3783614@student.rmit.edu.au" << std::endl;
    std::cout << std::endl;
-   std::cout << "Name:       " << "Shewit Tikue" << std::endl;
-   std::cout << "Student Id: " << "s3545853" << std::endl;
-   std::cout << "Email:      " << "s3545853@student.rmit.edu.au" << std::endl;
+   std::cout << "Name:       "
+             << "Shewit Tikue" << std::endl;
+   std::cout << "Student Id: "
+             << "s3545853" << std::endl;
+   std::cout << "Email:      "
+             << "s3545853@student.rmit.edu.au" << std::endl;
    std::cout << std::endl;
-   std::cout << "Name:       " << "Hamida Ehsani" << std::endl;
-   std::cout << "Student Id: " << "s3653728" << std::endl;
-   std::cout << "Email:      " << "s3653728@student.rmit.edu.au" << std::endl;
+   std::cout << "Name:       "
+             << "Hamida Ehsani" << std::endl;
+   std::cout << "Student Id: "
+             << "s3653728" << std::endl;
+   std::cout << "Email:      "
+             << "s3653728@student.rmit.edu.au" << std::endl;
    std::cout << "-------------------------------------------" << std::endl;
-   
 }
 
 // Converts a char of an integer to an integer
@@ -62,7 +71,6 @@ int Menu::charToInt(char character)
 {
    return (int)character - ASCII_ZERO;
 }
-
 
 int Menu::StringToInt(std::string number)
 {
@@ -76,9 +84,9 @@ int Menu::StringToInt(std::string number)
       hundreds = charToInt(number[0]);
       tens = charToInt(number[1]);
       ones = charToInt(number[2]);
-      numInt = (100*hundreds)+(10 * tens) + (ones);
+      numInt = (100 * hundreds) + (10 * tens) + (ones);
    }
-   else if(number.size() == 2)
+   else if (number.size() == 2)
    {
       tens = charToInt(number[0]);
       ones = charToInt(number[1]);
@@ -132,11 +140,11 @@ std::string Menu::getName()
    while (checker == false)
    {
       checker = true;
-      std::cout << "Enter your name (ONLY CAPITALS AND NO SPACES)" 
-      << std::endl;
+      std::cout << "Enter your name (ONLY CAPITALS AND NO SPACES)"
+                << std::endl;
 
       wordsIn = takeLineInput(' ');
-      if(wordsIn.size() ==1 && wordsIn[0] != std::to_string(EOF))
+      if (wordsIn.size() == 1 && wordsIn[0] != std::to_string(EOF))
       {
          // Check only one word inputted
          if (wordsIn.size() == 1)
@@ -171,7 +179,6 @@ std::string Menu::getName()
          name = std::to_string(EOF);
          checker = true;
       }
-      
    }
    return name;
 }
@@ -181,10 +188,9 @@ void Menu::printHighscores()
    std::cout << "Highscores:" << std::endl;
    std::vector<Player> players = readInHighscores();
    std::sort(players.begin(), players.end());
-   for(unsigned int i = 0; i < players.size(); i++)
+   for (unsigned int i = 0; i < players.size(); i++)
    {
-      std::cout << players.at(i).getName() << " " <<
-      players.at(i).getScore() << std::endl;
+      std::cout << players.at(i).getName() << " " << players.at(i).getScore() << std::endl;
    }
    std::cout << std::endl;
 }
@@ -196,7 +202,7 @@ std::vector<Player> Menu::readInHighscores()
    std::vector<std::string> playerString;
    std::vector<Player> players;
    std::ifstream highscore("highscores.txt");
-   while(highscore.peek() != EOF)
+   while (highscore.peek() != EOF)
    {
       std::getline(highscore, player);
       playerString = splitString(player, " ");
@@ -207,22 +213,22 @@ std::vector<Player> Menu::readInHighscores()
    return players;
 }
 
-void Menu::addToHighscores(std::vector<Player* > newPlayers)
+void Menu::addToHighscores(std::vector<Player *> newPlayers)
 {
    std::vector<Player> oldPlayers = readInHighscores();
 
-   for(unsigned int i = 0; i < newPlayers.size(); i++)
+   for (unsigned int i = 0; i < newPlayers.size(); i++)
    {
-      Player player (newPlayers.at(i)->getName(), newPlayers.at(i)->getScore());
+      Player player(newPlayers.at(i)->getName(), newPlayers.at(i)->getScore());
       oldPlayers.push_back(player);
    }
    std::sort(oldPlayers.begin(), oldPlayers.end());
 
    std::ofstream MyFile("highscores.txt");
 
-   if(!MyFile.fail())
+   if (!MyFile.fail())
    {
-      for(unsigned int i = 0; i < oldPlayers.size() && i < 10; i++)
+      for (unsigned int i = 0; i < oldPlayers.size() && i < 10; i++)
       {
          MyFile << oldPlayers.at(i).getName() << ": " << oldPlayers.at(i).getScore() << std::endl;
       }
@@ -230,26 +236,26 @@ void Menu::addToHighscores(std::vector<Player* > newPlayers)
 }
 
 // Splits a string by a character inputted, returns a vector
-std::vector<std::string> Menu::splitString(std::string string, 
-std::string delim)
+std::vector<std::string> Menu::splitString(std::string string,
+                                           std::string delim)
 {
    std::vector<std::string> stringVector;
-   if(string != "")
+   if (string != "")
    {
       int start = 0;
       int end = string.find(delim);
       int length = string.size();
       std::string word;
-      if(end != -1)
+      if (end != -1)
       {
-         while(end != -1)
+         while (end != -1)
          {
             word = string.substr(start, end - start);
             stringVector.push_back(word);
             start = end + delim.size();
-            end= string.find(delim, start);
+            end = string.find(delim, start);
          }
-         
+
          word = string.substr(start, length);
          stringVector.push_back(word);
       }

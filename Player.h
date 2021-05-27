@@ -6,39 +6,38 @@
 
 #include "LinkedList.h"
 
-class Player{
+class Player
+{
 public:
    Player(std::string name);
    Player(std::string name, int score);
-   Player(std::string name, int score, LinkedList* hand);
+   Player(std::string name, int score, LinkedList *hand);
    ~Player();
 
    std::string getName();
-   
-   bool operator<(const Player& player) const;
+
+   bool operator<(const Player &player) const;
    int getScore();
 
    int getNumber();
    void setNumber(int playerNumber);
    void setName(std::string newName);
    void printHand();
-   void addTile(Tile* newTile);
+   void addTile(Tile *newTile);
    void addScore(int scoreToAdd);
 
-   Tile* getTile();
+   Tile *getTile();
 
-   LinkedList* getHand();
+   LinkedList *getHand();
 
    std::string handToString();
-
-   
 
 private:
    std::string name;
    int score;
-   LinkedList* hand;
+   LinkedList *hand;
 
    int playerNumber;
 };
 
-# endif //PLAYER_H
+#endif //PLAYER_H

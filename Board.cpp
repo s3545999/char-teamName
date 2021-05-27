@@ -29,11 +29,11 @@ void Board::clear()
 {
    for (int i = 0; i < row; i++)
    {
-      for(int j = 0; j < col; j++)
+      for (int j = 0; j < col; j++)
       {
-         
-            delete theBoard[i][j];    
-            theBoard[i][j] = nullptr;         
+
+         delete theBoard[i][j];
+         theBoard[i][j] = nullptr;
       }
    }
 }
@@ -58,7 +58,7 @@ int Board::getCols()
    return col;
 }
 
-void Board::setBag(LinkedList* linkedList)
+void Board::setBag(LinkedList *linkedList)
 {
    bag = linkedList;
 }
@@ -69,7 +69,7 @@ LinkedList *Board::getBag()
 }
 
 // Returns a tile at a given location on the board
-Tile* Board::getTile(Location location)
+Tile *Board::getTile(Location location)
 {
    return theBoard[location.col][location.row];
 }
@@ -143,11 +143,11 @@ void Board::placeTile(Tile *newTile, Location location)
 bool Board::checkEmpty()
 {
    bool isEmpty = true;
-   for(int row = 0; row < NO_OF_ROWS; row++)
+   for (int row = 0; row < NO_OF_ROWS; row++)
    {
-      for(int col = 0; col < NO_OF_COLS; col++)
+      for (int col = 0; col < NO_OF_COLS; col++)
       {
-         if(theBoard[col][row] != nullptr)
+         if (theBoard[col][row] != nullptr)
          {
             isEmpty = false;
          }
@@ -162,7 +162,7 @@ bool Board::emptyLocation(Location location)
 {
    bool isEmpty = false;
 
-   if(theBoard[location.col][location.row] == nullptr)
+   if (theBoard[location.col][location.row] == nullptr)
    {
       isEmpty = true;
    }
@@ -181,27 +181,25 @@ std::string Board::saveBoard()
       {
          location.row = row;
          location.col = col;
-         
-         if(!emptyLocation(location))
+
+         if (!emptyLocation(location))
          {
-            if(!firstTile)
+            if (!firstTile)
             {
                boardLocation += ", ";
-               
             }
             firstTile = false;
             boardLocation += getTile(location)->getColour();
             boardLocation += std::to_string(getTile(location)->getShape());
             boardLocation += '@';
             boardLocation += row + 65;
-            boardLocation += std::to_string(col + 1); 
+            boardLocation += std::to_string(col + 1);
          }
       }
    }
 
    return boardLocation;
 }
-
 
 // Returns if a given location is within the board
 bool Board::isOnBoard(Location location)

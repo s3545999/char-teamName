@@ -32,7 +32,6 @@ Colour Tile::getColour()
 // Returns the shape of the tile
 Shape Tile::getShape()
 {
-    
     return shape;
 }
 

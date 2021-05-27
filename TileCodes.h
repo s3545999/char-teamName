@@ -80,10 +80,7 @@ struct Move
    Location location;
    Tile* tile;
 
-   Move()
-   {
-
-   }
+   Move(){}
 
    Move(Location location, Tile* tile)
    {

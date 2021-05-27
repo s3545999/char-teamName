@@ -12,15 +12,15 @@ void menu();
 
 void credits();
 void NewGame(GamePlay *gameTime);
-void LoadGame(GamePlay* gameTime);
-std::vector<Player* > getPlayerNames(int numPlayers, GamePlay* gameTime);
+void LoadGame(GamePlay *gameTime);
+std::vector<Player *> getPlayerNames(int numPlayers, GamePlay *gameTime);
 std::vector<Tile *> initialiseTileBag();
-void handingTilesToPlayers(std::vector<Player* > thePlayers, Board *theBoard);
-void playingTheGame(GamePlay* gameTime, int playersTurn);
-Player* loadInPlayer(std::ifstream& saveFile, Menu* menu);
-Board* loadInBoard(std::ifstream& saveFile, Menu* menu);
-void onePlayerTurn(GamePlay* gameTime, int currentTurn);
-bool addToHighscore(GamePlay* gameTime);
+void handingTilesToPlayers(std::vector<Player *> thePlayers, Board *theBoard);
+void playingTheGame(GamePlay *gameTime, int playersTurn);
+Player *loadInPlayer(std::ifstream &saveFile, Menu *menu);
+Board *loadInBoard(std::ifstream &saveFile, Menu *menu);
+void onePlayerTurn(GamePlay *gameTime, int currentTurn);
+bool addToHighscore(GamePlay *gameTime);
 
 int main(void)
 {
@@ -38,7 +38,7 @@ int main(void)
    {
       theMenu->printMenu();
       userString = theMenu->takeLineInput(' ');
-      if(!theMenu->getQuit())
+      if (!theMenu->getQuit())
       {
          if (userString.size() == 1)
          {
@@ -71,7 +71,6 @@ int main(void)
          {
             std::cout << "Invalid Input!" << std::endl;
          }
-         
       }
    }
    delete gameTime;
@@ -80,22 +79,21 @@ int main(void)
    return EXIT_SUCCESS;
 }
 
-
 // Starting a new game, setting up everything
-void NewGame(GamePlay* gameTime)
+void NewGame(GamePlay *gameTime)
 {
-   std::vector<Player* > thePlayers;
+   std::vector<Player *> thePlayers;
 
    std::cout << std::endl;
    std::cout << "How many players want to play?" << std::endl;
    std::string numPlayers;
 
    bool playersChosen = false;
-   while(!playersChosen && !gameTime->getMenu()->getQuit())
+   while (!playersChosen && !gameTime->getMenu()->getQuit())
    {
       std::vector<std::string> NumPlayersVect = gameTime->getMenu()->takeLineInput(' ');
 
-      if(NumPlayersVect.size() == 1 && NumPlayersVect[0].size() == 1)
+      if (NumPlayersVect.size() == 1 && NumPlayersVect[0].size() == 1)
       {
          numPlayers = NumPlayersVect[0];
          if (numPlayers == "2" || numPlayers == "3" || numPlayers == "4")
@@ -108,7 +106,7 @@ void NewGame(GamePlay* gameTime)
                thePlayers = getPlayerNames(numOfPlayers, gameTime);
                Board *board = new Board();
                std::vector<Tile *> tPtrs = initialiseTileBag();
-               LinkedList* bag = new LinkedList();
+               LinkedList *bag = new LinkedList();
                board->setBag(bag);
 
                for (Tile *tile : tPtrs)
@@ -123,32 +121,32 @@ void NewGame(GamePlay* gameTime)
             }
          }
       }
-      if(!gameTime->getMenu()->getQuit() && !playersChosen)
+      if (!gameTime->getMenu()->getQuit() && !playersChosen)
       {
          std::cout << "Incorrect input" << std::endl;
       }
    }
 }
 
-std::vector<Player* > getPlayerNames(int numPlayers, GamePlay* gameTime)
+std::vector<Player *> getPlayerNames(int numPlayers, GamePlay *gameTime)
 {
-   std::vector<Player* > thePlayers;
-   for (int i = 0; i != numPlayers && 
-   gameTime->getMenu()->getQuit() == false; i++)
+   std::vector<Player *> thePlayers;
+   for (int i = 0; i != numPlayers &&
+                   gameTime->getMenu()->getQuit() == false;
+        i++)
    {
-      std::cout << "Enter a name for Player " << i + 1 
-      << " (uppercase characters only)" << std::endl;
+      std::cout << "Enter a name for Player " << i + 1
+                << " (uppercase characters only)" << std::endl;
 
       std::string name = gameTime->getMenu()->getName();
       if (!gameTime->getMenu()->getQuit())
       {
-         Player* player = new Player(name);
+         Player *player = new Player(name);
          thePlayers.push_back(player);
       }
    }
    return thePlayers;
 }
-
 
 // Places tiles into a vector and returns it
 std::vector<Tile *> initialiseTileBag()
@@ -171,14 +169,14 @@ std::vector<Tile *> initialiseTileBag()
       }
    }
    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-   auto rng = std::default_random_engine {seed};
+   auto rng = std::default_random_engine{seed};
    std::shuffle(std::begin(orderedTiles), std::end(orderedTiles), rng);
 
    return orderedTiles;
 }
 
 // Places tiles from the bag into players hand
-void handingTilesToPlayers(std::vector<Player* > thePlayers, Board *theBoard)
+void handingTilesToPlayers(std::vector<Player *> thePlayers, Board *theBoard)
 {
    if ((unsigned int)theBoard->getBag()->getSize() >= thePlayers.size() * 6)
    {
@@ -202,13 +200,14 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
    int currentTurn;
    while (!gameTime->getMenu()->getQuit() && !gameover)
    {
-      for(currentTurn = playersTurn; 
-      (unsigned int)currentTurn < gameTime->getPlayers().size() && !gameover && 
-      !gameTime->getMenu()->getQuit(); currentTurn++)
+      for (currentTurn = playersTurn;
+           (unsigned int)currentTurn < gameTime->getPlayers().size() && !gameover &&
+           !gameTime->getMenu()->getQuit();
+           currentTurn++)
       {
          playersTurn = 0;
-         if(gameTime->getBoard()->getBag()->getSize() != 0 || 
-         gameTime->legalMove(currentTurn))
+         if (gameTime->getBoard()->getBag()->getSize() != 0 ||
+             gameTime->legalMove(currentTurn))
          {
             onePlayerTurn(gameTime, currentTurn);
             if (gameTime->getPlayers().at(currentTurn)->getHand()->getSize() == 0)
@@ -228,12 +227,12 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
       }
       currentTurn = 0;
    }
-   
+
    if (!gameTime->getMenu()->getQuit())
    {
       gameTime->handOutBonusPoints();
       std::vector<Player> players;
-      for(unsigned int i = 0; i< gameTime->getPlayers().size(); i++)
+      for (unsigned int i = 0; i < gameTime->getPlayers().size(); i++)
       {
          Player player(gameTime->getPlayers().at(i)->getName(), gameTime->getPlayers().at(i)->getScore());
          players.push_back(player);
@@ -243,70 +242,66 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
 
       std::sort(players.begin(), players.end());
       int draw = 0;
-      for(unsigned int i = 1; i <players.size(); i++)
+      for (unsigned int i = 1; i < players.size(); i++)
       {
-         if(players.at(i).getScore() == players.at(0).getScore())
+         if (players.at(i).getScore() == players.at(0).getScore())
          {
             draw = i;
          }
       }
-      if(draw > 0)
+      if (draw > 0)
       {
          std::cout << "Congratulations ";
-         for(unsigned int i = 0; i <= draw; i++)
+         for (unsigned int i = 0; i <= draw; i++)
          {
-            std::cout << players.at(i).getName() << ", ";;
-         }
-         std::cout << " drew for first with a score of: " 
-         << players.at(0).getScore() << std::endl;
 
-         for(unsigned int i = draw; i < players.size(); i++)
+            std::cout << players.at(i).getName();
+            if (i != draw)
+            {
+               std::cout << ", ";
+            }
+         }
+         std::cout << " you all drew for first with a score of: "
+                   << players.at(0).getScore() << std::endl;
+
+         for (unsigned int i = draw + 1; i < players.size(); i++)
          {
-            std::cout << "Unfortunate " << players.at(i).getName() <<
-            "you lost with a score of: " <<
-            players.at(0).getScore() << std::endl;
+            std::cout << "Unfortunate " << players.at(i).getName() << " you lost with a score of: " << players.at(i).getScore() << std::endl;
          }
-
       }
       else
       {
-         std::cout << "Congratulations " << 
-         players.at(0).getName() << " won with a score of: " 
-         << players.at(0).getScore() << std::endl;
-         for(unsigned int i = 1; i < players.size(); i++)
+         std::cout << "Congratulations " << players.at(0).getName() << " won with a score of: "
+                   << players.at(0).getScore() << std::endl;
+         for (unsigned int i = 1; i < players.size(); i++)
          {
-            std::cout << "Better luck next time " << 
-            players.at(i).getName() 
-            << " you finished with a score of: " 
-            << players.at(i).getScore() << std::endl;
+            std::cout << "Better luck next time " << players.at(i).getName()
+                      << " you finished with a score of: "
+                      << players.at(i).getScore() << std::endl;
          }
       }
-      if(addToHighscore(gameTime))
+      if (addToHighscore(gameTime))
       {
          std::cout << "Highscores Added" << std::endl;
          gameTime->getMenu()->addToHighscores(gameTime->getPlayers());
       }
-      
 
       gameTime->getMenu()->setQuit(true);
    }
 }
 
-
-
-bool addToHighscore(GamePlay* gameTime)
+bool addToHighscore(GamePlay *gameTime)
 {
    bool done = false;
    bool add = false;
 
-   std::cout << "Do you want to add to the highscores? "<< std::endl;
-   std::cout << "'Yes' or 'No' "<< std::endl;
-   
+   std::cout << "Do you want to add to the highscores? " << std::endl;
+   std::cout << "'Yes' or 'No' " << std::endl;
 
-   while(!done && !gameTime->getMenu()->getQuit())
+   while (!done && !gameTime->getMenu()->getQuit())
    {
       std::vector<std::string> input = gameTime->getMenu()->takeLineInput(' ');
-      if(input.size() == 1 && input.at(0) == "Yes")
+      if (input.size() == 1 && input.at(0) == "Yes")
       {
          done = true;
          add = true;
@@ -325,23 +320,21 @@ bool addToHighscore(GamePlay* gameTime)
 }
 
 // Start of a players turn
-void onePlayerTurn(GamePlay* gameTime, int playersTurn)
+void onePlayerTurn(GamePlay *gameTime, int playersTurn)
 {
-   
-   std::cout << gameTime->getPlayers().at(playersTurn)->getName() << 
-   " it is your turn" << std::endl;
 
-   std::cout << gameTime->getPlayers().at(playersTurn)->getName() 
-   << "'s score: " << gameTime->getPlayers().at(playersTurn)->getScore() 
-   << std::endl;
+   std::cout << gameTime->getPlayers().at(playersTurn)->getName() << " it is your turn" << std::endl;
 
-   for (unsigned int i = 0; i <gameTime->getPlayers().size(); i++)
+   std::cout << gameTime->getPlayers().at(playersTurn)->getName()
+             << "'s score: " << gameTime->getPlayers().at(playersTurn)->getScore()
+             << std::endl;
+
+   for (unsigned int i = 0; i < gameTime->getPlayers().size(); i++)
    {
       if (i != (unsigned int)playersTurn)
       {
          std::cout << gameTime->getPlayers().at(i)->getName()
-         << "'s score: " << 
-         gameTime->getPlayers().at(i)->getScore() << std::endl;
+                   << "'s score: " << gameTime->getPlayers().at(i)->getScore() << std::endl;
       }
    }
    gameTime->getBoard()->toString();
@@ -349,25 +342,25 @@ void onePlayerTurn(GamePlay* gameTime, int playersTurn)
 }
 
 //Loading saved game details from a save file
-void LoadGame(GamePlay* play)
+void LoadGame(GamePlay *play)
 {
    std::vector<Player *> thePlayers;
    std::vector<std::string> filename;
    std::string file;
-   Board* theBoard;
-   Player* player;
+   Board *theBoard;
+   Player *player;
    std::string numPlayers;
    int intOfPlayers;
 
-    std::cout << "Enter the filename from which to load a game" << std::endl;
-    filename = play->getMenu()->takeLineInput(' ');
-    if(filename.size() == 1 && !play->getMenu()->getQuit())
-    {
+   std::cout << "Enter the filename from which to load a game" << std::endl;
+   filename = play->getMenu()->takeLineInput(' ');
+   if (filename.size() == 1 && !play->getMenu()->getQuit())
+   {
       file = filename[0];
       file += ".save";
       std::ifstream saveFile(file);
 
-      if(saveFile.is_open())
+      if (saveFile.is_open())
       {
          std::getline(saveFile, numPlayers);
          intOfPlayers = play->getMenu()->charToInt(numPlayers[0]);
@@ -386,9 +379,9 @@ void LoadGame(GamePlay* play)
          play->setPlayer(thePlayers);
          play->setBoard(theBoard);
 
-         for(unsigned int i = 0; i < thePlayers.size(); i++)
+         for (unsigned int i = 0; i < thePlayers.size(); i++)
          {
-            if(thePlayers.at(i)->getName() == playerTurn)
+            if (thePlayers.at(i)->getName() == playerTurn)
             {
                playingTheGame(play, i);
             }
@@ -402,9 +395,9 @@ void LoadGame(GamePlay* play)
    }
 }
 //Loads in player
-Player* loadInPlayer(std::ifstream& saveFile, Menu* menu)
+Player *loadInPlayer(std::ifstream &saveFile, Menu *menu)
 {
-//Read data for player one and two
+   //Read data for player one and two
    std::string playerName = "";
    std::string playerScore = "";
    std::string playerHand = "";
@@ -422,21 +415,21 @@ Player* loadInPlayer(std::ifstream& saveFile, Menu* menu)
 
    playerHandVector = menu->splitString(playerHand, ",");
 
-   LinkedList* player1Hand = new LinkedList();
-   for (unsigned int i =0; i < playerHandVector.size(); i++)
+   LinkedList *player1Hand = new LinkedList();
+   for (unsigned int i = 0; i < playerHandVector.size(); i++)
    {
 
       Colour colour = playerHandVector[i][0];
       Shape shape = menu->charToInt(playerHandVector[i][1]);
-      Tile* newTile = new Tile(colour, shape);
+      Tile *newTile = new Tile(colour, shape);
       player1Hand->addBack(newTile);
    }
 
-   Player* playerOne = new Player(playerName, player1score, player1Hand);
+   Player *playerOne = new Player(playerName, player1score, player1Hand);
    return playerOne;
 }
 //Loads in the tiles placed on the board
-Board* loadInBoard(std::ifstream& saveFile, Menu* menu)
+Board *loadInBoard(std::ifstream &saveFile, Menu *menu)
 {
    std::vector<std::string> boardDimentions;
    std::vector<std::string> locationsW;
@@ -444,9 +437,9 @@ Board* loadInBoard(std::ifstream& saveFile, Menu* menu)
 
    std::string locations = "";
    std::string theBagString = "";
-   Board* theBoard = new Board();
+   Board *theBoard = new Board();
 
-   LinkedList* theBag = new LinkedList();
+   LinkedList *theBag = new LinkedList();
    int row = 0;
    int col = 0;
    std::string dimentions = "";
@@ -460,20 +453,20 @@ Board* loadInBoard(std::ifstream& saveFile, Menu* menu)
    }
    boardDimentions = menu->splitString(dimentions, ",");
    locationsW = menu->splitString(locations, ", ");
-   
-   if (boardDimentions.size() ==2)
+
+   if (boardDimentions.size() == 2)
    {
       row = menu->charToInt(boardDimentions[0][0]);
       col = menu->charToInt(boardDimentions[1][0]);
    }
-   
-   for (unsigned int i =0; i < locationsW.size(); i++)
+
+   for (unsigned int i = 0; i < locationsW.size(); i++)
    {
       Colour colour = locationsW[i][0];
-      
-      Shape shape= menu->charToInt(locationsW[i][1]);
-      Tile* tile = new Tile(colour, shape);
-      
+
+      Shape shape = menu->charToInt(locationsW[i][1]);
+      Tile *tile = new Tile(colour, shape);
+
       row = (int)locationsW[i][3] - ASCII_A;
       //changes input location to board location
 
@@ -493,22 +486,19 @@ Board* loadInBoard(std::ifstream& saveFile, Menu* menu)
       }
       col = numInt;
 
-      Location location(row,col);
+      Location location(row, col);
       theBoard->placeTile(tile, location);
    }
    bagTiles = menu->splitString(theBagString, ",");
 
-   for (unsigned int i =0; i < bagTiles.size(); i++)
+   for (unsigned int i = 0; i < bagTiles.size(); i++)
    {
       Colour colour = bagTiles[i][0];
       Shape shape = menu->charToInt(bagTiles[i][1]);
-      Tile* newTile = new Tile(colour, shape);
+      Tile *newTile = new Tile(colour, shape);
       theBag->addBack(newTile);
-
    }
    theBoard->setBag(theBag);
 
-
    return theBoard;
 }
-

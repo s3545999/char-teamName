@@ -4,14 +4,13 @@
 
 GamePlay::GamePlay()
 {
-   
 }
 
 GamePlay::~GamePlay()
 {
    delete theBoard;
    theBoard = nullptr;
-   for (unsigned int i =0; i< thePlayers.size(); i++)
+   for (unsigned int i = 0; i < thePlayers.size(); i++)
    {
       delete thePlayers.at(i);
    }
@@ -20,33 +19,32 @@ GamePlay::~GamePlay()
    menu = nullptr;
 }
 
-
-void GamePlay::setPlayer(std::vector<Player* > thePlayers)
+void GamePlay::setPlayer(std::vector<Player *> thePlayers)
 {
    this->thePlayers = thePlayers;
 }
 
-void GamePlay::setBoard(Board* board)
+void GamePlay::setBoard(Board *board)
 {
    theBoard = board;
 }
 
-Board* GamePlay::getBoard()
+Board *GamePlay::getBoard()
 {
    return theBoard;
 }
 
-void GamePlay::setMenu(Menu* menu)
+void GamePlay::setMenu(Menu *menu)
 {
    this->menu = menu;
 }
 
-Menu* GamePlay::getMenu()
+Menu *GamePlay::getMenu()
 {
    return menu;
 }
 
-std::vector<Player* > GamePlay::getPlayers()
+std::vector<Player *> GamePlay::getPlayers()
 {
    return thePlayers;
 }
@@ -65,7 +63,7 @@ void GamePlay::playerMove(int playerTurn)
    while (!endTurn && !menu->getQuit() && thePlayers.at(playerTurn)->getHand()->getSize() != 0)
    {
       wordsIn.empty();
-      if(tileReplaced)
+      if (tileReplaced)
       {
          std::cout << thePlayers.at(playerTurn)->getName() << ". Your hand is: " << std::endl;
          std::cout << thePlayers.at(playerTurn)->getHand()->llToString() << std::endl;
@@ -74,12 +72,12 @@ void GamePlay::playerMove(int playerTurn)
          std::cout << "Typing 'end' will end your turn" << std::endl;
          wordsIn = menu->takeLineInput(' ');
       }
-      else if(theMoves.size() == 0)
+      else if (theMoves.size() == 0)
       {
          std::cout << thePlayers.at(playerTurn)->getName() << ". Your hand is: " << std::endl;
          std::cout << thePlayers.at(playerTurn)->getHand()->llToString() << std::endl;
          std::cout << std::endl;
-         
+
          std::cout << "What move would you like to do?" << std::endl;
          wordsIn = menu->takeLineInput(' ');
       }
@@ -95,7 +93,7 @@ void GamePlay::playerMove(int playerTurn)
       triedToSaveGame = false;
 
       if (!menu->getQuit())
-      {  
+      {
          if (wordsIn.size() == 4 && wordsIn[0] == "place" && wordsIn[2] == "at")
          {
             int numMoves = theMoves.size();
@@ -109,13 +107,13 @@ void GamePlay::playerMove(int playerTurn)
          {
             tileReplaced = replaceTile(wordsIn, playerTurn);
          }
-         else if(wordsIn.size() == 2 && wordsIn[0] == "save")
+         else if (wordsIn.size() == 2 && wordsIn[0] == "save")
          {
             gameSaved = saveGame(wordsIn, playerTurn);
-            std::cout << "Game successfully saved" <<std::endl;
+            std::cout << "Game successfully saved" << std::endl;
             triedToSaveGame = true;
          }
-         else if((theMoves.size() != 0 || tileReplaced) && wordsIn.size() == 1 && wordsIn[0] == "end")
+         else if ((theMoves.size() != 0 || tileReplaced) && wordsIn.size() == 1 && wordsIn[0] == "end")
          {
             endTurn = true;
          }
@@ -125,20 +123,19 @@ void GamePlay::playerMove(int playerTurn)
             std::cout << "Please input again" << std::endl;
          }
 
-         if(theMoves.size() == 6)
+         if (theMoves.size() == 6)
          {
-            std::cout << "Your have placed all your tiles" << std::endl;
             std::cout << "Your turn is over" << std::endl;
             endTurn = true;
          }
 
-         if(triedToSaveGame && !gameSaved)
+         if (triedToSaveGame && !gameSaved)
          {
             std::cout << "Failed to save!" << std::endl;
          }
       }
    }
-   if(!menu->getQuit())
+   if (!menu->getQuit())
    {
       thePlayers.at(playerTurn)->addScore(score(theMoves));
       refillHand(playerTurn);
@@ -152,7 +149,7 @@ void GamePlay::playerMove(int playerTurn)
 
 void GamePlay::refillHand(int playerTurn)
 {
-   for(int i = thePlayers.at(playerTurn)->getHand()->getSize(); i != 6 && theBoard->getBag()->getSize() != 0; i++)
+   for (int i = thePlayers.at(playerTurn)->getHand()->getSize(); i != 6 && theBoard->getBag()->getSize() != 0; i++)
    {
       HandPlayerTile(playerTurn);
    }
@@ -163,10 +160,10 @@ std::vector<Move> GamePlay::place(std::vector<std::string> wordsIn, int playerTu
    std::vector<Move> moves = theMoves;
    if (tileInputtedIsOkay(wordsIn[1], playerTurn))
    {
-      Tile* tile = turnInputToTile(wordsIn[1]);
+      Tile *tile = turnInputToTile(wordsIn[1]);
       Location location = convertInputLoc(wordsIn[3]);
-      
-      if(checkNextTo(theMoves, tile, location) && placeTile(wordsIn, playerTurn))
+
+      if (checkNextTo(theMoves, tile, location) && placeTile(wordsIn, playerTurn))
       {
          Move move(location, tile);
          moves.push_back(move);
@@ -205,16 +202,15 @@ bool GamePlay::tileInputtedIsOkay(std::string tileString, int playerTurn)
 bool GamePlay::inputtedLocIsOkay(std::string location)
 {
    bool okay = false;
-   if(location.size() == 2 || location.size() == 3)
+   if (location.size() == 2 || location.size() == 3)
    {
-      if(location[0] >= 'A' && location[0] <= 'Z')
+      if (location[0] >= 'A' && location[0] <= 'Z')
       {
-         if(location.size() == 2 && location[1] >= '0' && location[1] <= '9')
+         if (location.size() == 2 && location[1] >= '0' && location[1] <= '9')
          {
             okay = true;
          }
-         else if(location.size() == 3 && location[1] >= '0' && location[1] <= '9'
-         && location[2] >= '0' && location[2] <=9)
+         else if (location.size() == 3 && location[1] >= '0' && location[1] <= '9' && location[2] >= '0' && location[2] <= 9)
          {
             okay = true;
          }
@@ -223,20 +219,19 @@ bool GamePlay::inputtedLocIsOkay(std::string location)
    return okay;
 }
 
-
 bool GamePlay::legalMove(int playerTurn)
 {
    bool check = false;
-   if(!theBoard->checkEmpty())
+   if (!theBoard->checkEmpty())
    {
-      for (int i=0; i < theBoard->getRows() && check == false; i++)
+      for (int i = 0; i < theBoard->getRows() && check == false; i++)
       {
-         for (int j=0; j < theBoard->getCols() && check == false; j++)
+         for (int j = 0; j < theBoard->getCols() && check == false; j++)
          {
-            for (int k=0; k < thePlayers.at(playerTurn)->getHand()->getSize() && check == false; k++)
+            for (int k = 0; k < thePlayers.at(playerTurn)->getHand()->getSize() && check == false; k++)
             {
-               Location location(i,j);
-               Tile* tile = thePlayers.at(playerTurn)->getHand()->get(k);
+               Location location(i, j);
+               Tile *tile = thePlayers.at(playerTurn)->getHand()->get(k);
                check = tileFit(tile, location);
             }
          }
@@ -251,7 +246,7 @@ bool GamePlay::legalMove(int playerTurn)
 
 // Changes an input string to a real tile
 // Only called if the tile is a possible tile
-Tile* GamePlay::turnInputToTile(std::string tiledata)
+Tile *GamePlay::turnInputToTile(std::string tiledata)
 {
    char colour = tiledata[0];
    int shape = menu->charToInt(tiledata[1]);
@@ -274,7 +269,7 @@ Location GamePlay::convertInputLoc(std::string inputLocation)
    }
    else
    {
-      location.col = menu->charToInt(inputLocation[1] ) - INDEXING;
+      location.col = menu->charToInt(inputLocation[1]) - INDEXING;
    }
    return location;
 }
@@ -290,10 +285,8 @@ bool GamePlay::placeTile(std::vector<std::string> wordsIn, int playerTurn)
    bool locExists = false;
    bool acceptableLoc = false;
 
-
    acceptableTile = tileInputtedIsOkay(wordsIn[1], playerTurn);
    checkTile = new Tile(wordsIn[1][0], menu->charToInt(wordsIn[1][1]));
-
 
    Location toPlace = convertInputLoc(wordsIn[3]);
    locExists = theBoard->isOnBoard(toPlace);
@@ -305,7 +298,6 @@ bool GamePlay::placeTile(std::vector<std::string> wordsIn, int playerTurn)
       acceptableLoc = tileFit(checkTile, toPlace);
    }
 
-
    // if player input were correct place the tile, put new tile in players hand
    if (!isSpotTaken && acceptableTile && locExists && acceptableLoc)
    {
@@ -315,8 +307,8 @@ bool GamePlay::placeTile(std::vector<std::string> wordsIn, int playerTurn)
 
       // Hand new tile to the player SHOULD BE A METHOD
       // HandPlayerTile(playerTurn);
-   // thePlayers.at(playerTurn)->addScore(score(toPlace));
-      moveMade = true;   
+      // thePlayers.at(playerTurn)->addScore(score(toPlace));
+      moveMade = true;
    }
    else
    {
@@ -328,40 +320,40 @@ bool GamePlay::placeTile(std::vector<std::string> wordsIn, int playerTurn)
    return moveMade;
 }
 
-bool GamePlay::checkNextTo(std::vector<Move> theMoves, Tile* tile, Location location)
+bool GamePlay::checkNextTo(std::vector<Move> theMoves, Tile *tile, Location location)
 {
    bool match = false;
 
    bool colMatch = true;
    bool rowMatch = true;
    Location nextLoc;
-   if(theMoves.size() != 0)
+   if (theMoves.size() != 0)
    {
-      for(unsigned int i = 0; i< theMoves.size(); i++)
+      for (unsigned int i = 0; i < theMoves.size(); i++)
       {
-         if(location.col != theMoves.at(i).location.col)
+         if (location.col != theMoves.at(i).location.col)
          {
             colMatch = false;
          }
-         if(location.row != theMoves.at(i).location.row)
+         if (location.row != theMoves.at(i).location.row)
          {
             rowMatch = false;
          }
 
          Location theMoveLoc = theMoves.at(i).location;
-         
-         for(int i = UP; i<= LEFT; i++)
+
+         for (int i = UP; i <= LEFT; i++)
          {
             nextLoc.col = location.getNextCol(i);
             nextLoc.row = location.getNextRow(i);
 
-            if(theMoveLoc.col == nextLoc.col && theMoveLoc.row == nextLoc.row)
+            if (theMoveLoc.col == nextLoc.col && theMoveLoc.row == nextLoc.row)
             {
                match = true;
             }
          }
       }
-      if(!colMatch && !rowMatch)
+      if (!colMatch && !rowMatch)
       {
          match = false;
       }
@@ -371,19 +363,17 @@ bool GamePlay::checkNextTo(std::vector<Move> theMoves, Tile* tile, Location loca
       match = true;
    }
 
-   return match; 
+   return match;
 }
 
-
-
 // Checks if a tile can legally be placed in a location
-bool GamePlay::tileFit(Tile* tile, Location location)
+bool GamePlay::tileFit(Tile *tile, Location location)
 {
    bool check = true;
 
    if (!theBoard->checkEmpty())
    {
-      if(!checkBothSides(UP, DOWN, location, tile) || !checkBothSides(RIGHT, LEFT, location, tile))
+      if (!checkBothSides(UP, DOWN, location, tile) || !checkBothSides(RIGHT, LEFT, location, tile))
       {
          check = false;
       }
@@ -408,48 +398,45 @@ bool GamePlay::replaceTile(std::vector<std::string> wordsIn, int playerTurn)
 
       Tile *checkTile = turnInputToTile(wordsIn[1]);
       int tileIndex = thePlayers.at(playerTurn)->getHand()->findSpecificTile(checkTile);
-      
+
       thePlayers.at(playerTurn)->getHand()->removeAt(tileIndex);
       theBoard->getBag()->addBack(checkTile);
 
-      
-
       rtnReplaced = true;
    }
-   else if(theBoard->getBag()->getSize() == 0)
+   else if (theBoard->getBag()->getSize() == 0)
    {
-      std::cout << "The bag is empty!" <<std::endl;
+      std::cout << "The bag is empty!" << std::endl;
    }
    else
    {
       std::cout << "That tile is not in your hand!" << std::endl;
    }
 
-
    return rtnReplaced;
 }
 
 // returns false if tile shouldnt be placed because of tiles around it
-bool GamePlay::checkBothSides(int direction1, int direction2, Location location, Tile* tile)
+bool GamePlay::checkBothSides(int direction1, int direction2, Location location, Tile *tile)
 {
    Location checkLocation;
    bool check = true;
    checkLocation.row = location.getNextRow(direction1);
    checkLocation.col = location.getNextCol(direction1);
 
-   std::vector<Tile*>* tileInLine = new std::vector<Tile*>();
+   std::vector<Tile *> *tileInLine = new std::vector<Tile *>();
    tileInLine->push_back(tile);
    checkDirection(direction1, location, tileInLine);
    checkDirection(direction2, location, tileInLine);
 
    check = !compareTiles(tileInLine);
 
-   for (long unsigned int i = 0; i< tileInLine->size(); i++)
+   for (long unsigned int i = 0; i < tileInLine->size(); i++)
    {
       tileInLine->pop_back();
    }
    delete tileInLine;
-   
+
    return check;
 }
 
@@ -458,8 +445,8 @@ bool GamePlay::checkIfNextToTiles(Location location)
 {
    Location checkLocation;
    bool check = true;
-   std::vector<Tile*>* tileInLine = new std::vector<Tile*>();
-   for(int i =UP; i<= LEFT; i++)
+   std::vector<Tile *> *tileInLine = new std::vector<Tile *>();
+   for (int i = UP; i <= LEFT; i++)
    {
       checkLocation.row = location.getNextRow(i);
       checkDirection(i, location, tileInLine);
@@ -473,26 +460,26 @@ bool GamePlay::checkIfNextToTiles(Location location)
 }
 
 // Adds all tiles in one direction from a location into a vector
-void GamePlay::checkDirection(int direction1, Location location, std::vector<Tile*>* tileInLine)
+void GamePlay::checkDirection(int direction1, Location location, std::vector<Tile *> *tileInLine)
 {
    Location checkLocation;
    checkLocation.row = location.getNextRow(direction1);
    checkLocation.col = location.getNextCol(direction1);
 
    bool empty = false;
-   while(!empty)
+   while (!empty)
    {
       if (theBoard->isOnBoard(checkLocation))
       {
-         if(!theBoard->emptyLocation(checkLocation))
+         if (!theBoard->emptyLocation(checkLocation))
          {
             theBoard->getTile(checkLocation);
             tileInLine->push_back(theBoard->getTile(checkLocation));
 
-            checkLocation.row = checkLocation.getNextRow( direction1);
-            checkLocation.col = checkLocation.getNextCol( direction1);
+            checkLocation.row = checkLocation.getNextRow(direction1);
+            checkLocation.col = checkLocation.getNextCol(direction1);
          }
-         else 
+         else
          {
             empty = true;
          }
@@ -505,10 +492,9 @@ void GamePlay::checkDirection(int direction1, Location location, std::vector<Til
 }
 
 // Returns true if two tiles in array are the same
-bool GamePlay::compareTiles(std::vector<Tile*>* tileInLine)
+bool GamePlay::compareTiles(std::vector<Tile *> *tileInLine)
 {
    bool match = false;
-
 
    Shape shape;
    Colour colour;
@@ -516,29 +502,29 @@ bool GamePlay::compareTiles(std::vector<Tile*>* tileInLine)
    bool shapeCheck = true;
    bool colourCheck = true;
 
-   for(long unsigned int i = 0; i < tileInLine->size() - 1; i++)
+   for (long unsigned int i = 0; i < tileInLine->size() - 1; i++)
    {
       shape = tileInLine->at(i)->getShape();
       colour = tileInLine->at(i)->getColour();
 
       for (long unsigned int j = i + 1; j < tileInLine->size(); j++)
       {
-         if(tileInLine->at(j)->getShape() != shape)
+         if (tileInLine->at(j)->getShape() != shape)
          {
             shapeCheck = false;
          }
-         if(tileInLine->at(j)->getColour() != colour)
+         if (tileInLine->at(j)->getColour() != colour)
          {
             colourCheck = false;
          }
-         if(tileInLine->at(j)->getShape() == shape && tileInLine->at(j)->getColour() == colour)
+         if (tileInLine->at(j)->getShape() == shape && tileInLine->at(j)->getColour() == colour)
          {
             match = true;
          }
       }
    }
 
-   if(!colourCheck && !shapeCheck)
+   if (!colourCheck && !shapeCheck)
    {
       match = true;
    }
@@ -566,12 +552,12 @@ bool GamePlay::saveGame(std::vector<std::string> wordsIn, int playersTurn)
    std::string fileName = wordsIn[1];
 
    fileName = fileName.append(fileExtension);
-   
+
    std::ofstream MyFile(fileName);
-   if(!MyFile.fail())
+   if (!MyFile.fail())
    {
       MyFile << thePlayers.size() << std::endl;
-      for(unsigned int i =0; i< thePlayers.size(); i++)
+      for (unsigned int i = 0; i < thePlayers.size(); i++)
       {
          MyFile << thePlayers.at(i)->getName() << std::endl;
          MyFile << thePlayers.at(i)->getScore() << std::endl;
@@ -579,25 +565,23 @@ bool GamePlay::saveGame(std::vector<std::string> wordsIn, int playersTurn)
       }
 
       MyFile << NO_OF_ROWS << ",";
-      MyFile << NO_OF_COLS <<std::endl;
+      MyFile << NO_OF_COLS << std::endl;
 
-      MyFile << theBoard->saveBoard() <<std::endl;
-      MyFile << theBoard->getBag()->llToString() <<std::endl;
+      MyFile << theBoard->saveBoard() << std::endl;
+      MyFile << theBoard->getBag()->llToString() << std::endl;
       MyFile << thePlayers.at(playersTurn)->getName() << std::endl;
 
       saveCheck = true;
-      
    }
    MyFile.close();
 
-   
    return saveCheck;
 }
 
 // Determines the score of a move
 int GamePlay::score(std::vector<Move> theMoves)
 {
-   int score  = 0;
+   int score = 0;
    Location D1nextLocation;
    Location D2nextLocation;
    bool inMoves = false;
@@ -605,14 +589,13 @@ int GamePlay::score(std::vector<Move> theMoves)
    int D1Score;
    int D2Score;
 
-   for(unsigned int i = 0; i < theMoves.size(); i++)
+   for (unsigned int i = 0; i < theMoves.size(); i++)
    {
       for (int direction = UP; direction <= RIGHT; direction++)
       {
          inMoves = false;
          int counter = 0;
-         
-         
+
          if (direction == UP)
          {
             otherDirection = DOWN;
@@ -623,33 +606,31 @@ int GamePlay::score(std::vector<Move> theMoves)
          }
 
          D1nextLocation.row = theMoves.at(i).location.getNextRow(direction);
-         D1nextLocation.col = theMoves.at(i).location.getNextCol(direction); 
+         D1nextLocation.col = theMoves.at(i).location.getNextCol(direction);
 
          D2nextLocation.row = theMoves.at(i).location.getNextRow(otherDirection);
          D2nextLocation.col = theMoves.at(i).location.getNextCol(otherDirection);
 
-         for(unsigned int j = 0; j < theMoves.size() && !inMoves; j++)
+         for (unsigned int j = 0; j < theMoves.size() && !inMoves; j++)
          {
 
-            if(D1nextLocation.row == theMoves.at(j).location.row
-            && D1nextLocation.col == theMoves.at(j).location.col)
+            if (D1nextLocation.row == theMoves.at(j).location.row && D1nextLocation.col == theMoves.at(j).location.col)
             {
                inMoves = true;
             }
 
-            if(D2nextLocation.row == theMoves.at(j).location.row
-            && D2nextLocation.col == theMoves.at(j).location.col)
+            if (D2nextLocation.row == theMoves.at(j).location.row && D2nextLocation.col == theMoves.at(j).location.col)
             {
                inMoves = true;
             }
          }
-         if(!inMoves)
+         if (!inMoves)
          {
             D1Score = scoreDirection(direction, theMoves.at(i).location);
-            
+
             D2Score = scoreDirection(otherDirection, theMoves.at(i).location);
 
-            if(D2Score > 0 || D1Score > 0)
+            if (D2Score > 0 || D1Score > 0)
             {
                ++counter;
             }
@@ -657,23 +638,22 @@ int GamePlay::score(std::vector<Move> theMoves)
             counter = counter + D2Score;
          }
 
-         if(counter == 6)
+         if (counter == 6)
          {
             std::cout << std::endl;
-            std::cout << "QWIRKLE!!!" <<std::endl;
+            std::cout << "QWIRKLE!!!" << std::endl;
 
             counter += 6;
          }
          score += counter;
       }
    }
-   
 
-   if(theMoves.size() > 1)
+   if (theMoves.size() > 1)
    {
       int counter = 0;
-      
-      for(unsigned int i = 0; i < theMoves.size(); i++)
+
+      for (unsigned int i = 0; i < theMoves.size(); i++)
       {
          for (int direction = UP; direction <= RIGHT; direction++)
          {
@@ -692,48 +672,44 @@ int GamePlay::score(std::vector<Move> theMoves)
             D2nextLocation.row = theMoves.at(i).location.getNextRow(otherDirection);
             D2nextLocation.col = theMoves.at(i).location.getNextCol(otherDirection);
 
-
             bool thisLineD1 = false;
             bool thisLineD2 = false;
 
-            for(unsigned int j = 0; j < theMoves.size(); j++)
+            for (unsigned int j = 0; j < theMoves.size(); j++)
             {
-               if(D1nextLocation.row == theMoves.at(j).location.row
-               && D1nextLocation.col == theMoves.at(j).location.col)
+               if (D1nextLocation.row == theMoves.at(j).location.row && D1nextLocation.col == theMoves.at(j).location.col)
                {
                   thisLineD1 = true;
                }
 
-               if(D2nextLocation.row == theMoves.at(j).location.row
-               && D2nextLocation.col == theMoves.at(j).location.col)
+               if (D2nextLocation.row == theMoves.at(j).location.row && D2nextLocation.col == theMoves.at(j).location.col)
                {
                   thisLineD2 = true;
                }
             }
 
-            if(thisLineD1 && !thisLineD2)
+            if (thisLineD1 && !thisLineD2)
             {
                counter += scoreDirection(otherDirection, theMoves.at(i).location);
             }
-            else if(!thisLineD1 && thisLineD2)
+            else if (!thisLineD1 && thisLineD2)
             {
                counter += scoreDirection(direction, theMoves.at(i).location);
             }
-            
          }
       }
 
       counter += theMoves.size();
-      if(counter == 6)
+      if (counter == 6)
       {
          std::cout << std::endl;
-         std::cout << "QWIRKLE!!!" <<std::endl;
+         std::cout << "QWIRKLE!!!" << std::endl;
 
          counter += 6;
       }
       score += counter;
    }
-   
+
    return score;
 }
 
@@ -743,11 +719,11 @@ int GamePlay::scoreDirection(int direction, Location location)
    bool Empty = false;
    int score = 0;
 
-   while(!Empty)
+   while (!Empty)
    {
       location.col = location.getNextCol(direction);
       location.row = location.getNextRow(direction);
-      if(theBoard->isOnBoard(location))
+      if (theBoard->isOnBoard(location))
       {
          Empty = theBoard->emptyLocation(location);
          if (!Empty)
@@ -765,9 +741,9 @@ int GamePlay::scoreDirection(int direction, Location location)
 
 void GamePlay::handOutBonusPoints()
 {
-   for(unsigned int i = 0; i< thePlayers.size(); i++)
+   for (unsigned int i = 0; i < thePlayers.size(); i++)
    {
-      if(thePlayers.at(i)->getHand()->getSize() == 0)
+      if (thePlayers.at(i)->getHand()->getSize() == 0)
       {
          thePlayers.at(i)->addScore(6);
       }

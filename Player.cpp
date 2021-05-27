@@ -14,7 +14,7 @@ Player::Player(std::string name, int score)
    hand = nullptr;
 }
 
-Player::Player(std::string name, int score, LinkedList* hand)
+Player::Player(std::string name, int score, LinkedList *hand)
 {
    this->name = name;
    this->score = score;
@@ -27,12 +27,10 @@ Player::~Player()
    hand = nullptr;
 }
 
-bool Player::operator < (const Player& player) const
+bool Player::operator<(const Player &player) const
 {
    return (player.score < score);
 }
-
-
 
 // Update the name of a player with a string input
 void Player::setName(std::string newName)
@@ -59,11 +57,10 @@ int Player::getScore()
 }
 
 // Returns the players hand
-LinkedList* Player::getHand()
+LinkedList *Player::getHand()
 {
    return hand;
 }
-
 
 void Player::setNumber(int playerNumber)
 {

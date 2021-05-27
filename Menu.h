@@ -8,9 +8,9 @@
 #include "TileCodes.h"
 #include "Player.h"
 
-class Menu{
-    public:
-
+class Menu
+{
+public:
     Menu();
 
     bool getQuit();
@@ -26,13 +26,12 @@ class Menu{
 
     void printHighscores();
     std::vector<Player> readInHighscores();
-    void addToHighscores(std::vector<Player* > newPlayers);
+    void addToHighscores(std::vector<Player *> newPlayers);
 
     std::vector<std::string> splitString(std::string string, std::string delim);
 
-    private:
+private:
     bool quit;
-
 };
 
 #endif //MENU_H

@@ -1,13 +1,13 @@
 
 #include "Node.h"
 
-
-Node::Node(){
+Node::Node()
+{
    this->tile = nullptr;
    this->next = nullptr;
 }
 
-Node::Node(Tile* tile, Node* next)
+Node::Node(Tile *tile, Node *next)
 {
 
    this->tile = tile;
@@ -15,8 +15,7 @@ Node::Node(Tile* tile, Node* next)
 }
 
 //Returns shallow copy for now
-Node::Node(Node& other):
-   tile(other.tile),
-   next(other.next)
+Node::Node(Node &other) : tile(other.tile),
+                          next(other.next)
 {
 }

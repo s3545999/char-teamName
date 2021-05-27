@@ -12,38 +12,35 @@
 #include "Player.h"
 #include "Menu.h"
 
-
 class GamePlay
 {
-    public:
-
+public:
     GamePlay();
     ~GamePlay();
 
-   void setMenu(Menu* menu);
-   Menu* getMenu();
-    void setPlayer(std::vector<Player* > thePlayers);
-    void setBoard(Board* theBoard);
-    Board* getBoard();
-    std::vector<Player* > getPlayers();
+    void setMenu(Menu *menu);
+    Menu *getMenu();
+    void setPlayer(std::vector<Player *> thePlayers);
+    void setBoard(Board *theBoard);
+    Board *getBoard();
+    std::vector<Player *> getPlayers();
     bool check(char *s);
     void NewGame();
-    
+
     std::vector<Move> place(std::vector<std::string> wordIn, int playerTurn, std::vector<Move> theMoves);
-    bool checkNextTo(std::vector<Move> theMoves, Tile* tile, Location location);
+    bool checkNextTo(std::vector<Move> theMoves, Tile *tile, Location location);
 
     void playerMove(int playerTurn);
     bool tileInputtedIsOkay(std::string tileString, int playerTurn);
     bool legalMove(int playerTurn);
-    
-    bool tileFit(Tile *tile, Location location);
-    bool checkBothSides(int direction1, int direction2, Location location, Tile* tile);
 
+    bool tileFit(Tile *tile, Location location);
+    bool checkBothSides(int direction1, int direction2, Location location, Tile *tile);
 
     void refillHand(int playerTurn);
 
-    bool compareTiles(std::vector<Tile*>* tileInLine);
-    void checkDirection(int direction1, Location location, std::vector<Tile*>* tileInLine);
+    bool compareTiles(std::vector<Tile *> *tileInLine);
+    void checkDirection(int direction1, Location location, std::vector<Tile *> *tileInLine);
     bool checkIfNextToTiles(Location location);
 
     bool placeTile(std::vector<std::string> wordsIn, int playerTurn);
@@ -64,14 +61,10 @@ class GamePlay
     int scoreDirection(int direction, Location location);
     void handOutBonusPoints();
 
-    private:
-
-    Menu* menu;
-    Board* theBoard;
-    std::vector<Player* > thePlayers;
+private:
+    Menu *menu;
+    Board *theBoard;
+    std::vector<Player *> thePlayers;
 };
-
-
-
 
 #endif //GAMEPLAY
