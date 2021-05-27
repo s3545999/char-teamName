@@ -35,6 +35,7 @@ place B6 at Q6
 place Y6 at P6
 end
 place G6 at Q5
+save Tests/Qtest
 place R6 at Q4
 end
 replace P3
@@ -59,49 +60,46 @@ end
 place G2 at V8
 place G3 at W8
 end
-place O5 at P3
-place O2 at O3
-place O4 at N3
+place O2 at P3
+place O4 at O3
 end
-place Y4 at N2
-place Y1 at M2
+place Y4 at O2
+place Y1 at N2
 end
 place P5 at V6
 place P6 at V5
 end
 place R3 at W9
-place R1 at X9
+place O3 at X9
 end
 place P3 at W10
 place P4 at V10
 end
-place P4 at N1
 place G4 at O1
 place B4 at P1
 end
 place Y2 at S14
-place P2 at S15
 end
-place O3 at W11
-place B3 at W12
+place P4 at V4
+place P1 at V3
 end
 place R3 at T4
-place R5 at U4
+place R5 at T5
 end
 place R6 at W5
 place G6 at X5
 end
-place R4 at N4
+place G1 at W3
 end
 place O1 at S3
-place P1 at S2
-place B1 at S1
+place B1 at S2
 end
-place Y5 at L2
+place Y5 at M2
 end
-place B5 at X12
+place B5 at T15
 end
-place B5 at M13
+place R4 at Q1
 end
-place O1 at T1
+place O1 at T2
+place O6 at T1
 No
