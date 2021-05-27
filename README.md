@@ -88,7 +88,7 @@ diff -w tests/<testname>.output tests/<testname>.gameout
     - `./qwirkle <tests/tilePlacement.input`
 
 - **userInputError -** The whole purpose of this test to check if the error messages provided by the system actully print out to console when the user does something that is not allowed. In this test when the user tries to replace a tile using `Replace` it returns an error message saying `"Incorrect Input!"` and when they try to replace using the correct replace command but with a wrong command it returns a message saying `"That tile is not in your hand!"`. Similarly when the user tries to place a tile randomly on the board it will return an error message saying `"Tile cannot be placed there!"`. This is minor error messages to help the user better understand what to do! To run this test run the following command:
-    - `./qwirkle <tests/userInputError.input`
+    - `./qwirkle <Tests/userInputError.input`
 
 </br>
 <hr></hr>
