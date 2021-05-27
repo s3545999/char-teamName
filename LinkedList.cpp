@@ -159,9 +159,7 @@ void LinkedList::removeAt(int index)
          delete current;
          size--;
       }
-      
    }
-
 }
 
 // Returns the front tile in a linkedList
@@ -221,16 +219,15 @@ std::string LinkedList::llToString()
 {
 
    std::string llTiles = "";
-   for(int i = 0; i < size; i++)
+   for (int i = 0; i < size; i++)
    {
 
       llTiles += get(i)->getColour();
       llTiles += std::to_string(get(i)->getShape());
-      if(i != size - 1)
+      if (i != size - 1)
       {
          llTiles += ",";
       }
-
    }
    return llTiles;
 }

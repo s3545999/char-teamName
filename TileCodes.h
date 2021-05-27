@@ -20,10 +20,10 @@
 #define STAR_6 5
 #define CLOVER 6
 
-#define NO_OF_TILESETS  2
-#define ASCII_A         65
-#define ASCII_ZERO      48
-#define INDEXING        1
+#define NO_OF_TILESETS 2
+#define ASCII_A 65
+#define ASCII_ZERO 48
+#define INDEXING 1
 
 const int UP = 0;
 const int RIGHT = 1;
@@ -78,11 +78,11 @@ struct Location
 struct Move
 {
    Location location;
-   Tile* tile;
+   Tile *tile;
 
-   Move(){}
+   Move() {}
 
-   Move(Location location, Tile* tile)
+   Move(Location location, Tile *tile)
    {
       this->location = location;
       this->tile = tile;
