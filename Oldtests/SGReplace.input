@@ -1,5 +1,0 @@
-2
-tests/SGReplace
-replace P6
-place Y4 at M15
-save tests/SGReplaceSaveOutput
