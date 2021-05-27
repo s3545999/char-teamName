@@ -230,7 +230,7 @@ void Menu::addToHighscores(std::vector<Player *> newPlayers)
    {
       for (unsigned int i = 0; i < oldPlayers.size() && i < 10; i++)
       {
-         MyFile << oldPlayers.at(i).getName() << ": " << oldPlayers.at(i).getScore() << std::endl;
+         MyFile << oldPlayers.at(i).getName() << " " << oldPlayers.at(i).getScore() << std::endl;
       }
    }
 }
