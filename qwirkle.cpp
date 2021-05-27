@@ -238,20 +238,49 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
          Player player(gameTime->getPlayers().at(i)->getName(), gameTime->getPlayers().at(i)->getScore());
          players.push_back(player);
       }
+      gameTime->getBoard()->toString();
+      std::cout << std::endl;
 
       std::sort(players.begin(), players.end());
-      
-      std::cout << "Congratulations " << 
-      players.at(0).getName() << " won with a score of: " 
-      << players.at(0).getScore() << std::endl;
-      for(unsigned int i = 1; i < players.size(); i++)
+      int draw = 0;
+      for(unsigned int i = 1; i <players.size(); i++)
       {
-         std::cout << "Better luck next time " << 
-         players.at(i).getName() 
-         << " you finished with a score of: " 
-         << players.at(i).getScore() << std::endl;
+         if(players.at(i).getScore() == players.at(0).getScore())
+         {
+            draw = i;
+         }
       }
+      if(draw > 0)
+      {
+         std::cout << "Congratulations ";
+         for(unsigned int i = 0; i <= draw; i++)
+         {
+            std::cout << players.at(i).getName() << ", ";;
+         }
+         std::cout << " drew for first with a score of: " 
+         << players.at(0).getScore() << std::endl;
 
+         for(unsigned int i = draw; i < players.size(); i++)
+         {
+            std::cout << "Unfortunate " << players.at(i).getName() <<
+            "you lost with a score of: " <<
+            players.at(0).getScore() << std::endl;
+         }
+
+      }
+      else
+      {
+         std::cout << "Congratulations " << 
+         players.at(0).getName() << " won with a score of: " 
+         << players.at(0).getScore() << std::endl;
+         for(unsigned int i = 1; i < players.size(); i++)
+         {
+            std::cout << "Better luck next time " << 
+            players.at(i).getName() 
+            << " you finished with a score of: " 
+            << players.at(i).getScore() << std::endl;
+         }
+      }
       if(addToHighscore(gameTime))
       {
          std::cout << "Highscores Added" << std::endl;

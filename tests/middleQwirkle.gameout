@@ -10,9 +10,9 @@ Menu
 5. Quit
 
 > Enter the filename from which to load a game
-> JIMMY it is your turn
-JIMMY's score: 0
-GUS's score: 0
+> CHUN it is your turn
+CHUN's score: 0
+LI's score: 0
    1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
 ---------------------------------------------------------------------------------
 A |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -27,7 +27,7 @@ I |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
 J |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 K |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 L |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-M |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+M |  |  |  |  |  |  |  |  |  |  |O1|O2|  |O3|O4|O5|  |  |  |  |  |  |  |  |  |  |
 N |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 O |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 P |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -42,14 +42,8 @@ X |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
 Y |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 Z |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 ---------------------------------------------------------------------------------
-JIMMY. Your hand is: 
-G6,B5,O1,R3,B1,O2
-
-What move would you like to do?
-> Incorrect Input!
-Please input again
-JIMMY. Your hand is: 
-G6,B5,O1,R3,B1,O2
+CHUN. Your hand is: 
+O6,R2
 
 What move would you like to do?
 >    1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
@@ -66,9 +60,9 @@ I |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
 J |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 K |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 L |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-M |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+M |  |  |  |  |  |  |  |  |  |  |O1|O2|O6|O3|O4|O5|  |  |  |  |  |  |  |  |  |  |
 N |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-O |  |  |  |  |  |  |  |  |  |  |G6|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+O |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 P |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 Q |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 R |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -81,13 +75,15 @@ X |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
 Y |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 Z |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 ---------------------------------------------------------------------------------
-JIMMY. Your hand is: 
-B5,O1,R3,B1,O2
+CHUN. Your hand is: 
+R2
 Would you like to place again?
 Typing 'end' will end your turn
-> GUS it is your turn
-GUS's score: 0
-JIMMY's score: 0
+> 
+QWIRKLE!!!
+LI it is your turn
+LI's score: 0
+CHUN's score: 12
    1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
 ---------------------------------------------------------------------------------
 A |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -102,9 +98,9 @@ I |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
 J |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 K |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 L |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-M |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+M |  |  |  |  |  |  |  |  |  |  |O1|O2|O6|O3|O4|O5|  |  |  |  |  |  |  |  |  |  |
 N |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-O |  |  |  |  |  |  |  |  |  |  |G6|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+O |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 P |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 Q |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 R |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -117,37 +113,8 @@ X |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
 Y |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 Z |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 ---------------------------------------------------------------------------------
-GUS. Your hand is: 
-O6,O6,R5,B6,O3,G5
+LI. Your hand is: 
+O6
 
 What move would you like to do?
-> 
-Tile cannot be placed there!
-Incorrect Input
-GUS. Your hand is: 
-O6,O6,R5,B6,O3,G5
-
-What move would you like to do?
-> Incorrect Input!
-Please input again
-GUS. Your hand is: 
-O6,O6,R5,B6,O3,G5
-
-What move would you like to do?
-> That tile is not in your hand!
-GUS. Your hand is: 
-O6,O6,R5,B6,O3,G5
-
-What move would you like to do?
-> GUS. Your hand is: 
-O6,R5,B6,O3,G5
-
-Use replace to replace another tile?
-Typing 'end' will end your turn
-> Incorrect Input
-GUS. Your hand is: 
-O6,R5,B6,O3,G5
-
-Use replace to replace another tile?
-Typing 'end' will end your turn
 > GoodBye!

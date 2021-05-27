@@ -105,7 +105,7 @@ void GamePlay::playerMove(int playerTurn)
                std::cout << "Incorrect Input" << std::endl;
             }
          }
-         else if (wordsIn.size() == 2 && wordsIn[0] == "replace" && theMoves.size() == 0 && thePlayers.at(playerTurn)->getHand()->getSize() == 6)
+         else if (wordsIn.size() == 2 && wordsIn[0] == "replace" && theMoves.size() == 0)
          {
             tileReplaced = replaceTile(wordsIn, playerTurn);
          }
