@@ -24,7 +24,6 @@ bool addToHighscore(GamePlay *gameTime);
 
 int main(void)
 {
-   // bool quit = false;
    Menu *theMenu = new Menu();
    GamePlay *gameTime = new GamePlay();
    gameTime->setMenu(theMenu);
@@ -64,6 +63,18 @@ int main(void)
             gameTime->getMenu()->printHighscores();
          }
          else if (userInput == "5")
+         {
+            gameTime->setSingleMove();
+            if (gameTime->getSingleMove())
+            {
+               std::cout << "Single move is now on" << std::endl;
+            }
+            else
+            {
+               std::cout << "Single move is now off" << std::endl;
+            }
+         }
+         else if (userInput == "6")
          {
             gameTime->getMenu()->setQuit(true);
          }
@@ -376,6 +387,13 @@ void LoadGame(GamePlay *play)
 
          std::getline(saveFile, playerTurn);
 
+         std::string singleTurn = "";
+
+         std::getline(saveFile, singleTurn);
+         if(singleTurn == "1")
+         {
+            play->setSingleMove();
+         }
          play->setPlayer(thePlayers);
          play->setBoard(theBoard);
 

@@ -4,12 +4,16 @@
 
 GamePlay::GamePlay()
 {
+   singleTurn = false;
 }
 
 GamePlay::~GamePlay()
 {
-   delete theBoard;
-   theBoard = nullptr;
+   if (theBoard != nullptr)
+   {
+      delete theBoard;
+      theBoard = nullptr;
+   }
    for (unsigned int i = 0; i < thePlayers.size(); i++)
    {
       delete thePlayers.at(i);
@@ -24,6 +28,15 @@ void GamePlay::setPlayer(std::vector<Player *> thePlayers)
    this->thePlayers = thePlayers;
 }
 
+void GamePlay::setSingleMove()
+{
+   this->singleTurn = !this->singleTurn;
+}
+
+bool GamePlay::getSingleMove()
+{
+   return this->singleTurn;
+}
 void GamePlay::setBoard(Board *board)
 {
    theBoard = board;
@@ -56,11 +69,13 @@ void GamePlay::playerMove(int playerTurn)
    bool gameSaved = false;
    bool triedToSaveGame = false;
    bool endTurn = false;
+   bool firstTurn = true;
 
    std::vector<Move> theMoves;
    std::vector<std::string> wordsIn;
    theMoves.empty();
-   while (!endTurn && !menu->getQuit() && thePlayers.at(playerTurn)->getHand()->getSize() != 0)
+   while (!endTurn && !menu->getQuit() && thePlayers.at(playerTurn)->getHand()->getSize() != 0 
+   && (!singleTurn || firstTurn))
    {
       wordsIn.empty();
       if (tileReplaced)
@@ -102,10 +117,15 @@ void GamePlay::playerMove(int playerTurn)
             {
                std::cout << "Incorrect Input" << std::endl;
             }
+            else
+            {
+               firstTurn = false;
+            }
          }
          else if (wordsIn.size() == 2 && wordsIn[0] == "replace" && theMoves.size() == 0)
          {
             tileReplaced = replaceTile(wordsIn, playerTurn);
+            firstTurn = false;
          }
          else if (wordsIn.size() == 2 && wordsIn[0] == "save")
          {
@@ -570,7 +590,7 @@ bool GamePlay::saveGame(std::vector<std::string> wordsIn, int playersTurn)
       MyFile << theBoard->saveBoard() << std::endl;
       MyFile << theBoard->getBag()->llToString() << std::endl;
       MyFile << thePlayers.at(playersTurn)->getName() << std::endl;
-
+      MyFile << singleTurn << std::endl;
       saveCheck = true;
    }
    MyFile.close();

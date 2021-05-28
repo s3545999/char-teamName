@@ -27,7 +27,8 @@ void Menu::printMenu()
    std::cout << "2. Load Game" << std::endl;
    std::cout << "3. Credits (Show student information)" << std::endl;
    std::cout << "4. Highscores" << std::endl;
-   std::cout << "5. Quit" << std::endl;
+   std::cout << "5. Change Place Multiple Tiles" << std::endl;
+   std::cout << "6. Quit" << std::endl;
    std::cout << std::endl;
 }
 
