@@ -1,0 +1,7 @@
+2
+Tests/placeSingleTile
+place Y1 at Y4
+place R1 at X4
+place R2 at X3
+save Tests/placeSingleTileSG
+place R6 at X2

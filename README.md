@@ -77,6 +77,9 @@ diff -w Tests/<testname>.output Tests/<testname>.gameout
 - **replaceTest -**  This test checks whether the `replace` command actually functions properly as when the game is running the players can run a command `replace <tileColour><tileShape>`, if this is run the first tile that matches the the users selection of tile will be removed and added to the back of the bag of tiles, and offer the ability to replace another tile the refill the hand from the front of the bag. To run this test run the following command:
     - `./qwirkle <Tests/replaceTest.input`
 
+- **placeSingleTile -**  This test tests playing a game in which only one tile can be placed per turn. As well as testing the saving of a game in which only one tile can be placed:
+    - `./qwirkle <Tests/placeSingleTile.input`
+
 - **SGReplace -** This test checks the save game functionality. this test starts off like other tests where there is a presaved game that is being loaded in, after it loads in, mockUser1 replaces the tile `P6` in their hand, then mockUser2 decides to place tile `Y4` at a legal spot on the board. Since its mockUser1 replaced a tile it can be seen that their hand has a new tile. At this stage the game is saved as the file `SGReplaceSaveOutput.save`. This save file actually checks two things one that the save functionality works as intended and the second the replaced tile`P6` is at the back of the entire bag. To run this test run the following command:
     - `./qwirkle <Tests/SGReplace.input`
 
