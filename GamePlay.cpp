@@ -5,6 +5,8 @@
 GamePlay::GamePlay()
 {
    singleTurn = false;
+   theBoard = nullptr;
+   menu = nullptr;
 }
 
 GamePlay::~GamePlay()

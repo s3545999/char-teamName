@@ -115,20 +115,24 @@ void NewGame(GamePlay *gameTime)
 
                int numOfPlayers = gameTime->getMenu()->charToInt(numPlayers[0]);
                thePlayers = getPlayerNames(numOfPlayers, gameTime);
-               Board *board = new Board();
-               std::vector<Tile *> tPtrs = initialiseTileBag();
-               LinkedList *bag = new LinkedList();
-               board->setBag(bag);
-
-               for (Tile *tile : tPtrs)
+               if (gameTime->getMenu()->getQuit() != true)
                {
-                  board->getBag()->addFront(tile);
+                  Board *board = new Board();
+                  std::vector<Tile *> tPtrs = initialiseTileBag();
+                  LinkedList *bag = new LinkedList();
+                  board->setBag(bag);
+
+                  for (Tile *tile : tPtrs)
+                  {
+                     board->getBag()->addFront(tile);
+                  }
+                  playersChosen = true;
+                  handingTilesToPlayers(thePlayers, board);
+                  gameTime->setPlayer(thePlayers);
+                  gameTime->setBoard(board);
+                  playingTheGame(gameTime, 0);
                }
-               playersChosen = true;
-               handingTilesToPlayers(thePlayers, board);
-               gameTime->setPlayer(thePlayers);
-               gameTime->setBoard(board);
-               playingTheGame(gameTime, 0);
+               
             }
          }
       }
@@ -137,6 +141,7 @@ void NewGame(GamePlay *gameTime)
          std::cout << "Incorrect input" << std::endl;
       }
    }
+
 }
 
 std::vector<Player *> getPlayerNames(int numPlayers, GamePlay *gameTime)
@@ -154,6 +159,14 @@ std::vector<Player *> getPlayerNames(int numPlayers, GamePlay *gameTime)
       {
          Player *player = new Player(name);
          thePlayers.push_back(player);
+      }
+      else 
+      {
+         for (unsigned int i = 0; i < thePlayers.size(); i++)
+         {
+            delete thePlayers.at(i);
+         }
+         thePlayers.clear();
       }
    }
    return thePlayers;
@@ -263,7 +276,7 @@ void playingTheGame(GamePlay *gameTime, int playersTurn)
       if (draw > 0)
       {
          std::cout << "Congratulations ";
-         for (unsigned int i = 0; i <= draw; i++)
+         for (int i = 0; i <= draw; i++)
          {
 
             std::cout << players.at(i).getName();
